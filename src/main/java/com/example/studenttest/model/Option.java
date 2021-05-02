@@ -1,18 +1,20 @@
 package com.example.studenttest.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
-@Table(name = "options")
 public class Option {
     @Id
-    @GeneratedValue(generator = "options_sequence")
+    @GeneratedValue(generator = "sex_gen")
     private Long id;
 
     private String optionText;
-    private boolean right;
+    private boolean isRight;
 
-    @OneToOne
+    @ManyToOne
     private Question question;
 
     public Long getId() {
@@ -32,11 +34,11 @@ public class Option {
     }
 
     public boolean isRight() {
-        return right;
+        return isRight;
     }
 
     public void setRight(boolean right) {
-        this.right = right;
+        isRight = right;
     }
 
     public Question getQuestion() {
@@ -50,10 +52,10 @@ public class Option {
     public Option() {
     }
 
-    public Option(Long id, String optionText, boolean right, Question question) {
+    public Option(Long id, String optionText, boolean isRight, Question question) {
         this.id = id;
         this.optionText = optionText;
-        this.right = right;
+        this.isRight = isRight;
         this.question = question;
     }
 }

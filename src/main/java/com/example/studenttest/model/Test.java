@@ -1,7 +1,6 @@
 package com.example.studenttest.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "tests")
@@ -10,8 +9,7 @@ public class Test {
     @GeneratedValue(generator = "tests_sequence")
     private Long id;
 
-    @OneToMany
-    private List<Question> questions;
+    private String title;
 
     public Long getId() {
         return id;
@@ -21,19 +19,19 @@ public class Test {
         this.id = id;
     }
 
-    public List<Question> getQuestions() {
-        return questions;
+    public String getTitle() {
+        return title;
     }
 
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Test() {
     }
 
-    public Test(Long id, List<Question> questions) {
+    public Test(Long id, String title) {
         this.id = id;
-        this.questions = questions;
+        this.title = title;
     }
 }
