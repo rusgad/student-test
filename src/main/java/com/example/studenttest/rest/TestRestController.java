@@ -20,7 +20,4 @@ public class TestRestController {
         ArrayList<Test> tests = (ArrayList<Test>) testRepository.findAll();
         return tests;
     }
-
-//    @GetMapping("/{id}")
-//    public ArrayList
 }
