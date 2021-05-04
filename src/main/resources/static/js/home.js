@@ -6,7 +6,7 @@ var app = new Vue({
     },
     methods: {
         fetchTests() {
-            fetch('http://192.168.31.49:8080/api/tests')
+            fetch('http://192.168.31.49:8080/api/test')
                 .then(response => response.json())
                 .then(data => this.tests = data)
         },

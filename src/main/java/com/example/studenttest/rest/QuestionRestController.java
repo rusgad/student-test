@@ -1,6 +1,9 @@
 package com.example.studenttest.rest;
 
+import com.example.studenttest.model.Option;
+import com.example.studenttest.model.QeustionWithOptions;
 import com.example.studenttest.model.Question;
+import com.example.studenttest.repository.OptionRepository;
 import com.example.studenttest.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +19,17 @@ public class QuestionRestController {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private OptionRepository optionRepository;
+
     @GetMapping("/{testId}")
-    public ArrayList<Question> getQuestions(@PathVariable long testId) {
+    public ArrayList<QeustionWithOptions> getQuestions(@PathVariable long testId) {
+        ArrayList<QeustionWithOptions> qeustionWithOptions = new ArrayList<>();
         ArrayList<Question> questions = (ArrayList<Question>) questionRepository.findByTestId(testId);
-        return questions;
+        for (Question question : questions) {
+            ArrayList<Option> options = (ArrayList<Option>) optionRepository.findByQuestionId(question.getId());
+            qeustionWithOptions.add(new QeustionWithOptions(question, options));
+        }
+        return qeustionWithOptions;
     }
 }
