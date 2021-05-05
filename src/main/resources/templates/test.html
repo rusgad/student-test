@@ -9,9 +9,10 @@
 <div id="app">
     <div v-for="(questionWithOptions, index) in questionsWithOptions">
         <h4>{{index + 1}}. {{questionWithOptions.question.questionText}}</h4>
-        <div v-for="option in questionWithOptions.options">
-            {{option.optionText}}
-        </div>
+            <div v-for="option in questionWithOptions.options">
+                <input type="radio" v-bind:id="option.optionText" v-bind:name="questionWithOptions.question.id" v-bind:value="option" v-model="questionWithOptions.pickedAnswer">
+                <label v-bind:for="option.optionText">{{option.optionText}}</label>
+            </div>
     </div>
 </div>
 

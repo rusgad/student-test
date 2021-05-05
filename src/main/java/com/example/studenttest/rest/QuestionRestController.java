@@ -18,17 +18,22 @@ import java.util.ArrayList;
 public class QuestionRestController {
     @Autowired
     private QuestionRepository questionRepository;
-
     @Autowired
     private OptionRepository optionRepository;
 
     @GetMapping("/{testId}")
     public ArrayList<QeustionWithOptions> getQuestions(@PathVariable long testId) {
         ArrayList<QeustionWithOptions> qeustionWithOptions = new ArrayList<>();
-        ArrayList<Question> questions = (ArrayList<Question>) questionRepository.findByTestId(testId);
-        for (Question question : questions) {
-            ArrayList<Option> options = (ArrayList<Option>) optionRepository.findByQuestionId(question.getId());
-            qeustionWithOptions.add(new QeustionWithOptions(question, options));
+        ArrayList<Question> questionsFromTest = (ArrayList<Question>) questionRepository.findByTestId(testId);
+        for (Question question : questionsFromTest) {
+            ArrayList<Option> optionsForQuestion = (ArrayList<Option>) optionRepository.findByQuestionId(question.getId());
+            Option rightOption = new Option();
+            for (Option option : optionsForQuestion) {
+                if (option.isRight()) {
+                    rightOption = option;
+                }
+            }
+            qeustionWithOptions.add(new QeustionWithOptions(question, optionsForQuestion, new Option(), rightOption.getOptionText()));
         }
         return qeustionWithOptions;
     }

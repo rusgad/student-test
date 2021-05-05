@@ -1,7 +1,6 @@
 package com.example.studenttest.rest;
 
 import com.example.studenttest.model.Test;
-import com.example.studenttest.repository.OptionRepository;
 import com.example.studenttest.repository.TestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

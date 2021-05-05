@@ -2,7 +2,6 @@ var app = new Vue({
     el: '#app',
     data: {
         tests: []
-
     },
     methods: {
         fetchTests() {
