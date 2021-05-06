@@ -1,8 +1,6 @@
 package com.example.studenttest.model;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.SortedMap;
 
 @Entity
 @Table(name = "students")

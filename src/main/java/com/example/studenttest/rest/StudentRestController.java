@@ -26,4 +26,5 @@ public class StudentRestController {
             studentRepository.save(new Student(username, "user"));
         }
     }
+
 }
