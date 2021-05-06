@@ -2,6 +2,7 @@ package com.example.studenttest.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.SortedMap;
 
 @Entity
 @Table(name = "students")
@@ -11,6 +12,7 @@ public class Student {
     private Long id;
 
     private String username;
+    private String role;
 
     public Long getId() {
         return id;
@@ -28,11 +30,19 @@ public class Student {
         this.username = username;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public Student() {
     }
 
-    public Student(Long id, String username) {
-        this.id = id;
+    public Student(String username, String role) {
         this.username = username;
+        this.role = role;
     }
 }
