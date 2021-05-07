@@ -16,11 +16,13 @@ Vue.component('login-form', {
                     'Content-Type': 'application/json'
                 },
                 body: (this.studentName.firstName + ' ' + this.studentName.secondName + ' ' + this.studentName.thirdName)
+            }).then(() => {
+                this.login()
+                this.studentName.firstName = ''
+                this.studentName.secondName = ''
+                this.studentName.thirdName = ''
             })
-            this.studentName.firstName = ''
-            this.studentName.secondName = ''
-            this.studentName.thirdName = ''
-            this.login()
+
         },
         login() {
             this.$emit('login', this.studentName)
@@ -110,7 +112,10 @@ var app = new Vue({
             alert("save is going")
         },
         saveStudentData(studentName) {
-            alert(studentName.firstName)
+            this.studentName.firstName = studentName.firstName
+            this.studentName.secondName = studentName.secondName
+            this.studentName.thirdName = studentName.thirdName
+            this.triggers.loginIsDone = true
         }
     },
     created() {
