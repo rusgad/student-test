@@ -1,3 +1,41 @@
+Vue.component('login-form', {
+    data: function () {
+        return {
+            studentName: {
+                firstName: '',
+                secondName: '',
+                thirdName: ''
+            }
+        }
+    },
+    methods: {
+        postStudentData() {
+            fetch('http://192.168.31.49:8080/api/students', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: (this.studentName.firstName + ' ' + this.studentName.secondName + ' ' + this.studentName.thirdName)
+            })
+            this.studentName.firstName = ''
+            this.studentName.secondName = ''
+            this.studentName.thirdName = ''
+            this.login()
+        },
+        login() {
+            this.$emit('login', this.studentName)
+        }
+    },
+    template:
+        '<div>' +
+            '<input type="text" v-model="studentName.firstName" placeholder="Фамилия">' +
+            '<input type="text" v-model="studentName.secondName" placeholder="Имя">' +
+            '<input type="text" v-model="studentName.thirdName" placeholder="Отчество">' +
+            '<button @click="postStudentData">Сохранить</button>' +
+        '</div>'
+})
+
+
 Vue.component('test', {
     props: ["selectedTest", "questionsAndOptions"],
     data: function () {
@@ -13,7 +51,7 @@ Vue.component('test', {
             this.$emit('save-result')
         }
     },
-    template: 
+    template:
         '<div>' +
             '<div v-for="(questionAndOptions, index) in questionsAndOptions">' +
                 '<h4>{{index + 1}}. {{questionAndOptions.question.questionText}}</h4>' +
@@ -29,7 +67,6 @@ Vue.component('test', {
 })
 
 
-
 var app = new Vue({
     el: '#app',
     data: {
@@ -37,6 +74,7 @@ var app = new Vue({
         selectedTest: {},
         questionsAndOptions: [],
         triggers: {
+            loginIsDone: false,
             testIsSelected: false
         },
         studentName: {
@@ -70,6 +108,9 @@ var app = new Vue({
         },
         saveResult() {
             alert("save is going")
+        },
+        saveStudentData(studentName) {
+            alert(studentName.firstName)
         }
     },
     created() {
