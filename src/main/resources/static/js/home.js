@@ -5,17 +5,26 @@ Vue.component('test', {
 
         }
     },
+    methods: {
+        returnBack() {
+            this.$emit('return-back')
+        },
+        saveResult() {
+            this.$emit('save-result')
+        }
+    },
     template: 
         '<div>' +
             '<div v-for="(questionAndOptions, index) in questionsAndOptions">' +
                 '<h4>{{index + 1}}. {{questionAndOptions.question.questionText}}</h4>' +
                 '<div v-for="option in questionAndOptions.options">' +
-                    '<input type="radio" v-bind:id="option.optionText" v-bind:name="questionAndOptions.question.id" v-bind:value="option" v-model="questionAndOptions.pickedAnswer">' +
+                    '<input type="radio" v-bind:id="option.optionText" v-bind:name="questionAndOptions.question.id"' +
+                    'v-bind:value="option" v-model="questionAndOptions.pickedAnswer">' +
                     '<label v-bind:for="option.optionText">{{option.optionText}}</label>' +
                 '</div>' +
             '</div>' +
-            '<button>Вернуться назад</button>' +
-            '<button>Сохранить результат</button>' +
+            '<button @click="returnBack">Вернуться назад</button>' +
+            '<button @click="saveResult">Сохранить результат</button>' +
         '</div>'
 })
 
@@ -49,15 +58,18 @@ var app = new Vue({
                 }
             }
             this.fetchQuestions()
-            this.showQuestions()
+            this.changeQuestionTrigger()
         },
         fetchQuestions() {
             fetch('http://192.168.31.49:8080/api/question/' + this.selectedTest.id)
                 .then(response => response.json())
                 .then(data => this.questionsAndOptions = data)
         },
-        showQuestions() {
+        changeQuestionTrigger() {
             this.triggers.testIsSelected = !this.triggers.testIsSelected
+        },
+        saveResult() {
+            alert("save is going")
         }
     },
     created() {
