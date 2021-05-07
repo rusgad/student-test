@@ -24,9 +24,9 @@ public class QuestionRestController {
     @GetMapping("/{testId}")
     public ArrayList<QeustionWithOptions> getQuestions(@PathVariable long testId) {
         ArrayList<QeustionWithOptions> qeustionWithOptions = new ArrayList<>();
-        ArrayList<Question> questionsFromTest = (ArrayList<Question>) questionRepository.findByTestId(testId);
+        ArrayList<Question> questionsFromTest = questionRepository.findByTestId(testId);
         for (Question question : questionsFromTest) {
-            ArrayList<Option> optionsForQuestion = (ArrayList<Option>) optionRepository.findByQuestionId(question.getId());
+            ArrayList<Option> optionsForQuestion = optionRepository.findByQuestionId(question.getId());
             Option rightOption = new Option();
             for (Option option : optionsForQuestion) {
                 if (option.isRight()) {

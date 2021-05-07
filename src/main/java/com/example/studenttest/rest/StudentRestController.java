@@ -10,6 +10,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/api/students")
 public class StudentRestController {
+
     @Autowired
     private StudentRepository studentRepository;
 
@@ -19,12 +20,17 @@ public class StudentRestController {
         return students;
     }
 
+//    @GetMapping("/current-user/{id}")
+//    public Student saveCurrentUser() {
+//
+//    }
+
     @PostMapping
     public void saveUserIfNotExist(@RequestBody String username) {
         Student student = studentRepository.findByUsername(username);
         if (student == null) {
-            studentRepository.save(new Student(username, "user"));
+            Student newStudent = new Student(username, "user");
+            studentRepository.save(newStudent);
         }
     }
-
 }

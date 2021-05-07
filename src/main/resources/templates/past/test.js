@@ -7,9 +7,6 @@ var app = new Vue({
         currentUrl: window.location.href
     },
     methods: {
-        checkUsername() {
-
-        },
         fetchStudents() {
             fetch('http://192.168.31.49:8080/api/students')
                 .then(response => response.json())
