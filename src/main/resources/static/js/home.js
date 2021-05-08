@@ -22,18 +22,27 @@ Vue.component('login-form', {
                 this.studentName.secondName = ''
                 this.studentName.thirdName = ''
             })
-
         },
         login() {
             this.$emit('login', this.studentName)
         }
     },
+    computed: {
+        validationError() {
+            if ((this.studentName.firstName.trim() == '') || (this.studentName.secondName.trim() == '') ||
+                (this.studentName.thirdName.trim() == '')) {
+                return true
+            } else {
+                return false
+            }
+        }
+    },
     template:
-        '<div class="row col-4 mx-auto">' +
+        '<div class="row col-md-4 mx-auto">' +
             '<input class="form-control mt-2" type="text" v-model="studentName.firstName" placeholder="Фамилия">' +
             '<input class="form-control mt-2" type="text" v-model="studentName.secondName" placeholder="Имя">' +
             '<input class="form-control mt-2" type="text" v-model="studentName.thirdName" placeholder="Отчество">' +
-            '<button class="btn btn-primary mt-2" @click="postStudentData">Сохранить</button>' +
+            '<button :disabled="validationError" class="btn btn-primary mt-2" @click="postStudentData">Сохранить</button>' +
         '</div>'
 })
 
@@ -113,7 +122,7 @@ var app = new Vue({
             this.triggers.testIsSelected = !this.triggers.testIsSelected
         },
         saveResult() {
-            this.resultOfTesting.push({})
+
         },
         saveStudentData(studentName) {
             this.studentName.firstName = studentName.firstName.trim()
