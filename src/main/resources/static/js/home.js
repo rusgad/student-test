@@ -75,7 +75,7 @@ Vue.component('test', {
             '</div>' +
             '<div class="row justify-content-between m-3">' +
                 '<button class="col-3 btn btn-primary" @click="returnBack">Вернуться назад</button>' +
-                '<button class="col-3 btn btn-primary" @click="saveTestResult">Сохранить результат</button>' +
+                '<button class="col-3 btn btn-primary" @click="saveTestResult">Завершить тест</button>' +
            '</div>' +
         '</div>'
 })
@@ -128,16 +128,18 @@ var app = new Vue({
             this.triggers.loginIsDone = true
         },
         saveTestResult() {
-            fetch('http://192.168.31.49:8080/api/result', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: this.studentName.firstName + ' ' + this.studentName.secondName + ' ' + this.studentName.thirdName,
-                    estimate: this.questionsAndOptions
-                })
-            })
+            // fetch('http://192.168.31.49:8080/api/result', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({
+            //         username: this.studentName.firstName + ' ' + this.studentName.secondName + ' ' + this.studentName.thirdName,
+            //         estimate: this.questionsAndOptions
+            //     })
+            // })
+
+
         },
     },
     created() {
