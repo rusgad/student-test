@@ -15,7 +15,7 @@ Vue.component('login-form', {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: (this.studentName.firstName + ' ' + this.studentName.secondName + ' ' + this.studentName.thirdName)
+                body: (this.studentName.firstName.trim() + ' ' + this.studentName.secondName.trim() + ' ' + this.studentName.thirdName.trim())
             }).then(() => {
                 this.login()
                 this.studentName.firstName = ''
@@ -29,11 +29,11 @@ Vue.component('login-form', {
         }
     },
     template:
-        '<div>' +
-            '<input type="text" v-model="studentName.firstName" placeholder="Фамилия">' +
-            '<input type="text" v-model="studentName.secondName" placeholder="Имя">' +
-            '<input type="text" v-model="studentName.thirdName" placeholder="Отчество">' +
-            '<button @click="postStudentData">Сохранить</button>' +
+        '<div class="row col-4 mx-auto">' +
+            '<input class="form-control mt-2" type="text" v-model="studentName.firstName" placeholder="Фамилия">' +
+            '<input class="form-control mt-2" type="text" v-model="studentName.secondName" placeholder="Имя">' +
+            '<input class="form-control mt-2" type="text" v-model="studentName.thirdName" placeholder="Отчество">' +
+            '<button class="btn btn-primary mt-2" @click="postStudentData">Сохранить</button>' +
         '</div>'
 })
 
@@ -54,17 +54,20 @@ Vue.component('test', {
         }
     },
     template:
-        '<div>' +
+        '<div class="container bg-light rounded border mt-2 p-2">' +
+            '<h1 class="text-center mb-4">{{selectedTest.title}}</h1>' +
             '<div v-for="(questionAndOptions, index) in questionsAndOptions">' +
                 '<h4>{{index + 1}}. {{questionAndOptions.question.questionText}}</h4>' +
                 '<div v-for="option in questionAndOptions.options">' +
-                    '<input type="radio" v-bind:id="option.optionText" v-bind:name="questionAndOptions.question.id"' +
-                    'v-bind:value="option" v-model="questionAndOptions.pickedAnswer">' +
-                    '<label v-bind:for="option.optionText">{{option.optionText}}</label>' +
+                    '<input class="form-check-input" type="radio" v-bind:id="option.optionText" v-bind:name="questionAndOptions.question.id"' +
+                    'v-bind:value="option" v-model="questionAndOptions.pickedAnswer"> ' +
+                    '<label class="form-check-label fs-5" v-bind:for="option.optionText">{{option.optionText}}</label>' +
                 '</div>' +
             '</div>' +
-            '<button @click="returnBack">Вернуться назад</button>' +
-            '<button @click="saveResult">Сохранить результат</button>' +
+            '<div class="row justify-content-between m-3">' +
+                '<button class="col-3 btn btn-primary" @click="returnBack">Вернуться назад</button>' +
+                '<button class="col-3 btn btn-primary" @click="saveResult">Сохранить результат</button>' +
+           '</div>' +
         '</div>'
 })
 
@@ -75,6 +78,7 @@ var app = new Vue({
         tests: [],
         selectedTest: {},
         questionsAndOptions: [],
+        resultOfTesting: [],
         triggers: {
             loginIsDone: false,
             testIsSelected: false
@@ -109,12 +113,12 @@ var app = new Vue({
             this.triggers.testIsSelected = !this.triggers.testIsSelected
         },
         saveResult() {
-            alert("save is going")
+            this.resultOfTesting.push({})
         },
         saveStudentData(studentName) {
-            this.studentName.firstName = studentName.firstName
-            this.studentName.secondName = studentName.secondName
-            this.studentName.thirdName = studentName.thirdName
+            this.studentName.firstName = studentName.firstName.trim()
+            this.studentName.secondName = studentName.secondName.trim()
+            this.studentName.thirdName = studentName.thirdName.trim()
             this.triggers.loginIsDone = true
         }
     },

@@ -20,11 +20,6 @@ public class StudentRestController {
         return students;
     }
 
-//    @GetMapping("/current-user/{id}")
-//    public Student saveCurrentUser() {
-//
-//    }
-
     @PostMapping
     public void saveUserIfNotExist(@RequestBody String username) {
         Student student = studentRepository.findByUsername(username);
