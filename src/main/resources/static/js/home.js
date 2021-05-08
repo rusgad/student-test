@@ -58,8 +58,8 @@ Vue.component('test', {
         returnBack() {
             this.$emit('return-back')
         },
-        saveResult() {
-            this.$emit('save-result')
+        saveTestResult() {
+            this.$emit('save-test-result')
         }
     },
     template:
@@ -75,7 +75,7 @@ Vue.component('test', {
             '</div>' +
             '<div class="row justify-content-between m-3">' +
                 '<button class="col-3 btn btn-primary" @click="returnBack">Вернуться назад</button>' +
-                '<button class="col-3 btn btn-primary" @click="saveResult">Сохранить результат</button>' +
+                '<button class="col-3 btn btn-primary" @click="saveTestResult">Сохранить результат</button>' +
            '</div>' +
         '</div>'
 })
@@ -121,15 +121,24 @@ var app = new Vue({
         changeQuestionTrigger() {
             this.triggers.testIsSelected = !this.triggers.testIsSelected
         },
-        saveResult() {
-
-        },
         saveStudentData(studentName) {
             this.studentName.firstName = studentName.firstName.trim()
             this.studentName.secondName = studentName.secondName.trim()
             this.studentName.thirdName = studentName.thirdName.trim()
             this.triggers.loginIsDone = true
-        }
+        },
+        saveTestResult() {
+            fetch('http://192.168.31.49:8080/api/result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: this.studentName.firstName + ' ' + this.studentName.secondName + ' ' + this.studentName.thirdName,
+                    estimate: this.questionsAndOptions
+                })
+            })
+        },
     },
     created() {
         this.fetchTests()
