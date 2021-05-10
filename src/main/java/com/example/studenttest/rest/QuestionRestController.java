@@ -1,7 +1,7 @@
 package com.example.studenttest.rest;
 
 import com.example.studenttest.model.Option;
-import com.example.studenttest.model.QeustionWithOptions;
+import com.example.studenttest.model.QuestionWithOptions;
 import com.example.studenttest.model.Question;
 import com.example.studenttest.repository.OptionRepository;
 import com.example.studenttest.repository.QuestionRepository;
@@ -22,8 +22,8 @@ public class QuestionRestController {
     private OptionRepository optionRepository;
 
     @GetMapping("/{testId}")
-    public ArrayList<QeustionWithOptions> getQuestions(@PathVariable long testId) {
-        ArrayList<QeustionWithOptions> qeustionWithOptions = new ArrayList<>();
+    public ArrayList<QuestionWithOptions> getQuestions(@PathVariable long testId) {
+        ArrayList<QuestionWithOptions> questionWithOptions = new ArrayList<>();
         ArrayList<Question> questionsFromTest = questionRepository.findByTestId(testId);
         for (Question question : questionsFromTest) {
             ArrayList<Option> optionsForQuestion = optionRepository.findByQuestionId(question.getId());
@@ -33,8 +33,16 @@ public class QuestionRestController {
                     rightOption = option;
                 }
             }
-            qeustionWithOptions.add(new QeustionWithOptions(question, optionsForQuestion, new Option(), rightOption.getOptionText()));
+            questionWithOptions.add(new QuestionWithOptions(question, optionsForQuestion, new Option(), rightOption.getOptionText()));
         }
-        return qeustionWithOptions;
+        return questionWithOptions;
+    }
+
+    @GetMapping("/test")
+    public void test() {
+        ArrayList<Option> options = optionRepository.findByQuestionId(1);
+        for (Option option : options) {
+            System.out.println(option.getOptionText());
+        }
     }
 }

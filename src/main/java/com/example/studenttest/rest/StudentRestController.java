@@ -24,7 +24,7 @@ public class StudentRestController {
     public void saveUserIfNotExist(@RequestBody String username) {
         Student student = studentRepository.findByUsername(username);
         if (student == null) {
-            Student newStudent = new Student(username, "user");
+            Student newStudent = new Student(username);
             studentRepository.save(newStudent);
         }
     }

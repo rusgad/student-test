@@ -1,15 +1,13 @@
 package com.example.studenttest.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "options")
 public class Option {
     @Id
-    @GeneratedValue(generator = "sex_gen")
-    private Long id;
+    @GeneratedValue(generator = "option_sequence")
+    private long id;
 
     private String optionText;
     private boolean isRight;

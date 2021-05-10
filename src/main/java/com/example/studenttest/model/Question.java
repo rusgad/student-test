@@ -6,8 +6,8 @@ import javax.persistence.*;
 @Table(name = "questions")
 public class Question {
     @Id
-    @GeneratedValue(generator = "questions_sequence")
-    private Long id;
+    @GeneratedValue(generator = "question_sequence")
+    private long id;
 
     private String questionText;
 

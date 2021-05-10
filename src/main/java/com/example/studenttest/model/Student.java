@@ -6,11 +6,10 @@ import javax.persistence.*;
 @Table(name = "students")
 public class Student {
     @Id
-    @GeneratedValue(generator = "students_sequence")
-    private Long id;
+    @GeneratedValue(generator = "student_sequence")
+    private long id;
 
     private String username;
-    private String role;
 
     public Long getId() {
         return id;
@@ -28,19 +27,10 @@ public class Student {
         this.username = username;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public Student() {
     }
 
-    public Student(String username, String role) {
+    public Student(String username) {
         this.username = username;
-        this.role = role;
     }
 }

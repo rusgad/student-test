@@ -59,7 +59,7 @@ Vue.component('test', {
             this.$emit('return-back')
         },
         saveTestResult() {
-            this.$emit('save-test-result')
+            alert('hi')
         }
     },
     template:
@@ -126,21 +126,7 @@ var app = new Vue({
             this.studentName.secondName = studentName.secondName.trim()
             this.studentName.thirdName = studentName.thirdName.trim()
             this.triggers.loginIsDone = true
-        },
-        saveTestResult() {
-            // fetch('http://192.168.31.49:8080/api/result', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({
-            //         username: this.studentName.firstName + ' ' + this.studentName.secondName + ' ' + this.studentName.thirdName,
-            //         estimate: this.questionsAndOptions
-            //     })
-            // })
-
-
-        },
+        }
     },
     created() {
         this.fetchTests()

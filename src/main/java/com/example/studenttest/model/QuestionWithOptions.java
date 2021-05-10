@@ -2,7 +2,7 @@ package com.example.studenttest.model;
 
 import java.util.ArrayList;
 
-public class QeustionWithOptions {
+public class QuestionWithOptions {
     private Question question;
     private ArrayList<Option> options;
     private Option pickedAnswer;
@@ -40,10 +40,10 @@ public class QeustionWithOptions {
         this.rightAnswer = rightAnswer;
     }
 
-    public QeustionWithOptions() {
+    public QuestionWithOptions() {
     }
 
-    public QeustionWithOptions(Question question, ArrayList<Option> options, Option pickedAnswer, String rightAnswer) {
+    public QuestionWithOptions(Question question, ArrayList<Option> options, Option pickedAnswer, String rightAnswer) {
         this.question = question;
         this.options = options;
         this.pickedAnswer = pickedAnswer;
