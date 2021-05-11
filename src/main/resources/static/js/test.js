@@ -10,7 +10,7 @@ Vue.component('login-form', {
     },
     methods: {
         postStudentData() {
-            fetch('http://192.168.31.49:8080/api/students', {
+            fetch('http://localhost:8080/api/students', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -59,7 +59,13 @@ Vue.component('test', {
             this.$emit('return-back')
         },
         saveTestResult() {
-            alert('hi')
+            fetch('http://localhost:8080/api/answer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.questionsAndOptions)
+            })
         }
     },
     template:
@@ -100,7 +106,7 @@ var app = new Vue({
     },
     methods: {
         fetchTests() {
-            fetch('http://192.168.31.49:8080/api/test')
+            fetch('http://localhost:8080/api/test')
                 .then(response => response.json())
                 .then(data => this.tests = data)
         },
@@ -114,7 +120,7 @@ var app = new Vue({
             this.changeQuestionTrigger()
         },
         fetchQuestions() {
-            fetch('http://192.168.31.49:8080/api/question/' + this.selectedTest.id)
+            fetch('http://localhost:8080/api/question/' + this.selectedTest.id)
                 .then(response => response.json())
                 .then(data => this.questionsAndOptions = data)
         },
