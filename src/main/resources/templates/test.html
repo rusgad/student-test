@@ -12,7 +12,8 @@
 
     <login-form v-if="!triggers.loginIsDone" @login="saveStudentData"></login-form>
     <div v-else>
-        <test v-if="triggers.testIsSelected" :questions-and-options="questionsAndOptions" :selected-test="selectedTest"
+        <test v-if="triggers.testIsSelected" :student-name="studentName" :questions-and-options="questionsAndOptions"
+              :selected-test="selectedTest"
               @return-back="changeQuestionTrigger"></test>
         <div class="container col-md-6" v-else>
             <h3 class="text-center m-4">Здравствуйте, {{studentName.firstName}} {{studentName.secondName}}</h3>

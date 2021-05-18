@@ -13,6 +13,8 @@ public class Answer {
     private Student student;
     @ManyToOne
     private Option selectedOption;
+    @ManyToOne
+    private Test test;
 
     public long getId() {
         return id;
@@ -38,12 +40,20 @@ public class Answer {
         this.selectedOption = selectedOption;
     }
 
+    public Test getTest() {
+        return test;
+    }
+
+    public void setTest(Test test) {
+        this.test = test;
+    }
+
     public Answer() {
     }
 
-    public Answer(long id, Student student, Option selectedOption) {
-        this.id = id;
+    public Answer(Student student, Option selectedOption, Test test) {
         this.student = student;
         this.selectedOption = selectedOption;
+        this.test = test;
     }
 }

@@ -48,12 +48,7 @@ Vue.component('login-form', {
 
 
 Vue.component('test', {
-    props: ["selectedTest", "questionsAndOptions"],
-    data: function () {
-        return {
-
-        }
-    },
+    props: ["selectedTest", "questionsAndOptions", "studentName"],
     methods: {
         returnBack() {
             this.$emit('return-back')
@@ -122,7 +117,13 @@ var app = new Vue({
         fetchQuestions() {
             fetch('http://localhost:8080/api/question/' + this.selectedTest.id)
                 .then(response => response.json())
-                .then(data => this.questionsAndOptions = data)
+                .then(data => {
+                    this.questionsAndOptions = data
+                    for (let item of this.questionsAndOptions) {
+                        item.studentName = this.studentName.firstName + ' ' + this.studentName.secondName + ' ' +
+                            this.studentName.thirdName
+                    }
+                })
         },
         changeQuestionTrigger() {
             this.triggers.testIsSelected = !this.triggers.testIsSelected
