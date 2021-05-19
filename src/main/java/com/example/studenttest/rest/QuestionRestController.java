@@ -1,7 +1,7 @@
 package com.example.studenttest.rest;
 
 import com.example.studenttest.model.Option;
-import com.example.studenttest.model.QuestionWithOptions;
+import com.example.studenttest.wrappers.QuestionWithOptions;
 import com.example.studenttest.model.Question;
 import com.example.studenttest.repository.OptionRepository;
 import com.example.studenttest.repository.QuestionRepository;

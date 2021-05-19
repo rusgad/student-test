@@ -1,4 +1,4 @@
-package com.example.studenttest.model;
+package com.example.studenttest.wrappers;
 
 public class AnswerFromUser extends QuestionWithOptions {
     private String studentName;

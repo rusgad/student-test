@@ -48,7 +48,12 @@ Vue.component('login-form', {
 
 
 Vue.component('test', {
-    props: ["selectedTest", "questionsAndOptions", "studentName"],
+    props: ["selectedTest", "questionsAndOptions"],
+    data() {
+        return {
+            selectedAnswers: []
+        }
+    },
     methods: {
         returnBack() {
             this.$emit('return-back')
@@ -60,7 +65,21 @@ Vue.component('test', {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(this.questionsAndOptions)
+            }).then(this.getResultOfTest)
+        },
+        getResultOfTest() {
+            fetch('http://localhost:8080/api/answer/selected', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    studentName: "s s s",
+                    testId: 3
+                })
             })
+                .then(response => response.json())
+                .then(data => this.selectedAnswers = data)
         }
     },
     template:
@@ -69,8 +88,9 @@ Vue.component('test', {
             '<div v-for="(questionAndOptions, index) in questionsAndOptions">' +
                 '<h4>{{index + 1}}. {{questionAndOptions.question.questionText}}</h4>' +
                 '<div v-for="option in questionAndOptions.options">' +
-                    '<input class="form-check-input" type="radio" v-bind:id="option.optionText" v-bind:name="questionAndOptions.question.id"' +
-                    'v-bind:value="option" v-model="questionAndOptions.pickedAnswer"> ' +
+                    '<input class="form-check-input" type="radio" v-bind:id="option.optionText"' +
+                        'v-bind:name="questionAndOptions.question.id"' +
+                        'v-bind:value="option" v-model="questionAndOptions.pickedAnswer"> ' +
                     '<label class="form-check-label fs-5" v-bind:for="option.optionText">{{option.optionText}}</label>' +
                 '</div>' +
             '</div>' +

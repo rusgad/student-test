@@ -1,4 +1,7 @@
-package com.example.studenttest.model;
+package com.example.studenttest.wrappers;
+
+import com.example.studenttest.model.Option;
+import com.example.studenttest.model.Question;
 
 import java.util.ArrayList;
 
