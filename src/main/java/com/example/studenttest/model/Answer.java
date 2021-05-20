@@ -15,6 +15,8 @@ public class Answer {
     private Option selectedOption;
     @ManyToOne
     private Test test;
+    @ManyToOne
+    private Question question;
 
     public long getId() {
         return id;
@@ -48,12 +50,21 @@ public class Answer {
         this.test = test;
     }
 
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
     public Answer() {
     }
 
-    public Answer(Student student, Option selectedOption, Test test) {
+    public Answer(Student student, Option selectedOption, Test test, Question question) {
         this.student = student;
         this.selectedOption = selectedOption;
         this.test = test;
+        this.question = question;
     }
 }

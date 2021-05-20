@@ -20,21 +20,29 @@ public class AnswerRestController {
     @Autowired
     private StudentRepository studentRepository;
 
-    @PostMapping("/selected")
-    public ArrayList<Answer> getStudentAnswersForTest(@RequestBody StudentWithTest studentWithTest) {
-        Student student = studentRepository.findByUsername(studentWithTest.getStudentName());
-        ArrayList<Answer> studentAnswersForTest =
-                answerRepository.findByStudentAndTest_Id(student, studentWithTest.getTestId());
-        return studentAnswersForTest;
-    }
-
     @PostMapping
-    public void saveAnswers(@RequestBody ArrayList<AnswerFromUser> answers) {
-        Student student = studentRepository.findByUsername(answers.get(0).getStudentName());
-        for (AnswerFromUser answer : answers) {
-            Answer answerForDb = new Answer(student, answer.getPickedAnswer(),
-                    answer.getPickedAnswer().getQuestion().getTest());
-            answerRepository.save(answerForDb);
+    public ArrayList<Answer> saveAnswers(@RequestBody ArrayList<AnswerFromUser> selectedAnswers) {
+        Student student = studentRepository.findByUsername(selectedAnswers.get(0).getStudentName());
+        ArrayList<Answer> answersForSelectedTest = new ArrayList<>();
+
+        for (AnswerFromUser answer : selectedAnswers) {
+            Answer newAnswer = new Answer(student, answer.getPickedAnswer(),
+                    answer.getPickedAnswer().getQuestion().getTest(), answer.getPickedAnswer().getQuestion());
+
+            if (answerRepository.findAnswerByStudentAndQuestion(student, answer.getPickedAnswer()
+                    .getQuestion()) == null) {
+                answerRepository.save(newAnswer);
+            } else {
+                Answer existingAnswer = answerRepository.findAnswerByStudentAndQuestion
+                        (student, answer.getPickedAnswer().getQuestion());
+                existingAnswer.setSelectedOption(answer.getPickedAnswer());
+                answerRepository.save(existingAnswer);
+            }
+
+            answersForSelectedTest.add(new Answer(student, answer.getPickedAnswer(),
+                    answer.getPickedAnswer().getQuestion().getTest(), answer.getPickedAnswer().getQuestion()));
         }
+
+        return answersForSelectedTest;
     }
 }

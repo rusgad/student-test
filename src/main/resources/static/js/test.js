@@ -65,18 +65,6 @@ Vue.component('test', {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(this.questionsAndOptions)
-            }).then(this.getResultOfTest)
-        },
-        getResultOfTest() {
-            fetch('http://localhost:8080/api/answer/selected', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    studentName: "s s s",
-                    testId: 3
-                })
             })
                 .then(response => response.json())
                 .then(data => this.selectedAnswers = data)
