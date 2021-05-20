@@ -51,7 +51,8 @@ Vue.component('test', {
     props: ["selectedTest", "questionsAndOptions"],
     data() {
         return {
-            selectedAnswers: []
+            selectedAnswers: [],
+            allQuestionAnswered: true
         }
     },
     methods: {
@@ -59,15 +60,27 @@ Vue.component('test', {
             this.$emit('return-back')
         },
         saveTestResult() {
-            fetch('http://localhost:8080/api/answer', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(this.questionsAndOptions)
-            })
-                .then(response => response.json())
-                .then(data => this.selectedAnswers = data)
+            if (this.allQuestionAnswered == false) {
+                fetch('http://localhost:8080/api/answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(this.questionsAndOptions)
+                })
+                    .then(response => response.json())
+                    .then(data => this.selectedAnswers = data)
+            }
+        },
+        checkAnswers() {
+            for (let item of this.questionsAndOptions) {
+                if (item.pickedAnswer.optionText == null) {
+                    this.allQuestionAnswered = true
+                    break
+                } else {
+                    this.allQuestionAnswered = false
+                }
+            }
         }
     },
     template:
@@ -76,7 +89,8 @@ Vue.component('test', {
             '<div v-for="(questionAndOptions, index) in questionsAndOptions">' +
                 '<h4>{{index + 1}}. {{questionAndOptions.question.questionText}}</h4>' +
                 '<div v-for="option in questionAndOptions.options">' +
-                    '<input class="form-check-input" type="radio" v-bind:id="option.optionText"' +
+                    '<input class="form-check-input" type="radio" @change="checkAnswers"' +
+        '                v-bind:id="option.optionText"' +
                         'v-bind:name="questionAndOptions.question.id"' +
                         'v-bind:value="option" v-model="questionAndOptions.pickedAnswer"> ' +
                     '<label class="form-check-label fs-5" v-bind:for="option.optionText">{{option.optionText}}</label>' +
@@ -84,7 +98,8 @@ Vue.component('test', {
             '</div>' +
             '<div class="row justify-content-between m-3">' +
                 '<button class="col-3 btn btn-primary" @click="returnBack">Вернуться назад</button>' +
-                '<button class="col-3 btn btn-primary" @click="saveTestResult">Завершить тест</button>' +
+                '<button class="col-3 btn btn-primary" :disabled="allQuestionAnswered"' +
+                    ' @click="saveTestResult">Завершить тест</button>' +
            '</div>' +
         '</div>'
 })
