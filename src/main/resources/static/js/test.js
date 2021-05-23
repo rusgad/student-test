@@ -48,7 +48,7 @@ Vue.component('login-form', {
 
 
 Vue.component('test', {
-    props: ["selectedTest", "questionsAndOptions"],
+    props: ["selectedTest", "questionsAndOptions", "latestResultOfTest"],
     data() {
         return {
             selectedAnswers: [],
@@ -89,11 +89,13 @@ Vue.component('test', {
             '<div v-for="(questionAndOptions, index) in questionsAndOptions">' +
                 '<h4>{{index + 1}}. {{questionAndOptions.question.questionText}}</h4>' +
                 '<div v-for="option in questionAndOptions.options">' +
-                    '<input class="form-check-input" type="radio" @change="checkAnswers"' +
-        '                v-bind:id="option.optionText"' +
-                        'v-bind:name="questionAndOptions.question.id"' +
-                        'v-bind:value="option" v-model="questionAndOptions.pickedAnswer"> ' +
-                    '<label class="form-check-label fs-5" v-bind:for="option.optionText">{{option.optionText}}</label>' +
+                    '<div :class="{\'bg-success\': option.right}">' +
+                        '<input class="form-check-input" type="radio" @change="checkAnswers"' +
+                            'v-bind:id="option.optionText"' +
+                            'v-bind:name="questionAndOptions.question.id"' +
+                            'v-bind:value="option" v-model="questionAndOptions.pickedAnswer"> ' +
+                        '<label class="form-check-label fs-5" v-bind:for="option.optionText">{{option.optionText}}</label>' +
+                    '</div>' +
                 '</div>' +
             '</div>' +
             '<div class="row justify-content-between m-3">' +
@@ -111,7 +113,7 @@ var app = new Vue({
         tests: [],
         selectedTest: {},
         questionsAndOptions: [],
-        resultOfTesting: [],
+        latestResultOfTest: [],
         triggers: {
             loginIsDone: false,
             testIsSelected: false
@@ -120,7 +122,7 @@ var app = new Vue({
             firstName: '',
             secondName: '',
             thirdName: ''
-        },
+        }
     },
     methods: {
         fetchTests() {
@@ -143,10 +145,13 @@ var app = new Vue({
                 .then(data => {
                     this.questionsAndOptions = data
                     for (let item of this.questionsAndOptions) {
-                        item.studentName = this.studentName.firstName + ' ' + this.studentName.secondName + ' ' +
+                        item.studentName =
+                            this.studentName.firstName + ' ' +
+                            this.studentName.secondName + ' ' +
                             this.studentName.thirdName
                     }
                 })
+                .then(this.fetchLatestResult)
         },
         changeQuestionTrigger() {
             this.triggers.testIsSelected = !this.triggers.testIsSelected
@@ -156,6 +161,20 @@ var app = new Vue({
             this.studentName.secondName = studentName.secondName.trim()
             this.studentName.thirdName = studentName.thirdName.trim()
             this.triggers.loginIsDone = true
+        },
+        fetchLatestResult() {
+            fetch('http://localhost:8080/api/answer/latest-result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: (this.studentName.firstName + ' ' + this.studentName.secondName + ' ' + this.studentName.thirdName),
+                    testId: this.selectedTest.id
+                })
+            })
+                .then(response => response.json())
+                .then(data => this.latestResultOfTest = data)
         }
     },
     created() {

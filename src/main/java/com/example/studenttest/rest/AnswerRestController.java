@@ -5,11 +5,9 @@ import com.example.studenttest.model.Student;
 import com.example.studenttest.repository.AnswerRepository;
 import com.example.studenttest.repository.StudentRepository;
 import com.example.studenttest.wrappers.AnswerFromUser;
+import com.example.studenttest.wrappers.StudentAndTestId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -46,5 +44,12 @@ public class AnswerRestController {
         }
 
         return answersForSelectedTest;
+    }
+
+    @PostMapping("/latest-result")
+    public ArrayList<Answer> getLatestResultOfTest(@RequestBody StudentAndTestId studentAndTestId) {
+        ArrayList<Answer> latestResultOfTest = answerRepository.
+                findByStudent_UsernameAndTest_Id(studentAndTestId.getUsername(), studentAndTestId.getTestId());
+        return latestResultOfTest;
     }
 }
