@@ -52,7 +52,10 @@ Vue.component('test', {
     data() {
         return {
             selectedAnswers: [],
-            allQuestionAnswered: true
+            allQuestionAnswered: true,
+            showResultTrigger: false,
+            questionQuantity: 0,
+            rightAnswersCount: 0
         }
     },
     methods: {
@@ -70,6 +73,8 @@ Vue.component('test', {
                 })
                     .then(response => response.json())
                     .then(data => this.selectedAnswers = data)
+                    .then(this.showResult)
+                    .then(this.countRightAnswers)
             }
         },
         checkAnswers() {
@@ -81,15 +86,27 @@ Vue.component('test', {
                     this.allQuestionAnswered = false
                 }
             }
+        },
+        showResult() {
+            this.allQuestionAnswered = true
+            this.showResultTrigger = true
+        },
+        countRightAnswers() {
+            this.questionQuantity = this.selectedAnswers.length
+            for (let answer of this.selectedAnswers) {
+                if (answer.selectedOption.right) {
+                    this.rightAnswersCount++
+                }
+            }
         }
     },
     template:
-        '<div class="container bg-light rounded border mt-2 p-2">' +
+        '<div class="container col-12 bg-light rounded border mt-2 p-2">' +
             '<h1 class="text-center mb-4">{{selectedTest.title}}</h1>' +
             '<div v-for="(questionAndOptions, index) in questionsAndOptions">' +
                 '<h4>{{index + 1}}. {{questionAndOptions.question.questionText}}</h4>' +
                 '<div v-for="option in questionAndOptions.options">' +
-                    '<div :class="{\'bg-success\': option.right}">' +
+                    '<div :class="{\'bg-success\': (option.right && showResultTrigger)}">' +
                         '<input class="form-check-input" type="radio" @change="checkAnswers"' +
                             'v-bind:id="option.optionText"' +
                             'v-bind:name="questionAndOptions.question.id"' +
@@ -100,8 +117,8 @@ Vue.component('test', {
             '</div>' +
             '<div class="row justify-content-between m-3">' +
                 '<button class="col-3 btn btn-primary" @click="returnBack">Вернуться назад</button>' +
-                '<button class="col-3 btn btn-primary" :disabled="allQuestionAnswered"' +
-                    ' @click="saveTestResult">Завершить тест</button>' +
+                '<span class="col-3 display-4 text-center" v-show="showResultTrigger">{{rightAnswersCount}}/{{questionQuantity}}</span>' +
+                '<button class="col-3 btn btn-primary" @click="saveTestResult" :disabled="allQuestionAnswered">Завершить тест</button>' +
            '</div>' +
         '</div>'
 })
