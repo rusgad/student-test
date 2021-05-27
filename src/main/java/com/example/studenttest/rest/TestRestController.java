@@ -11,8 +11,12 @@ import java.util.ArrayList;
 @CrossOrigin
 @RequestMapping("/api/test")
 public class TestRestController {
-    @Autowired
+
     private TestRepository testRepository;
+
+    public TestRestController(TestRepository testRepository) {
+        this.testRepository = testRepository;
+    }
 
     @GetMapping
     public ArrayList<Test> getTests() {

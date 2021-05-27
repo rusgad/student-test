@@ -14,10 +14,14 @@ import java.util.ArrayList;
 @CrossOrigin
 @RequestMapping("/api/question")
 public class QuestionRestController {
-    @Autowired
+
     private QuestionRepository questionRepository;
-    @Autowired
     private OptionRepository optionRepository;
+
+    public QuestionRestController(QuestionRepository questionRepository, OptionRepository optionRepository) {
+        this.questionRepository = questionRepository;
+        this.optionRepository = optionRepository;
+    }
 
     @GetMapping("/{testId}")
     public ArrayList<QuestionWithOptions> getQuestions(@PathVariable long testId) {

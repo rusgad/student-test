@@ -6,7 +6,6 @@ import com.example.studenttest.repository.AnswerRepository;
 import com.example.studenttest.repository.StudentRepository;
 import com.example.studenttest.wrappers.AnswerFromUser;
 import com.example.studenttest.wrappers.StudentAndTestId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -14,11 +13,14 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/api/answer")
 public class AnswerRestController {
-    @Autowired
-    private AnswerRepository answerRepository;
 
-    @Autowired
+    private AnswerRepository answerRepository;
     private StudentRepository studentRepository;
+
+    public AnswerRestController(AnswerRepository answerRepository, StudentRepository studentRepository) {
+        this.answerRepository = answerRepository;
+        this.studentRepository = studentRepository;
+    }
 
     @PostMapping
     public ArrayList<Answer> saveAnswers(@RequestBody ArrayList<AnswerFromUser> selectedAnswers) {

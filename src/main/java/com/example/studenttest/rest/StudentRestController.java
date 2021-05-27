@@ -12,8 +12,11 @@ import java.util.ArrayList;
 @RequestMapping("/api/students")
 public class StudentRestController {
 
-    @Autowired
     private StudentRepository studentRepository;
+
+    public StudentRestController(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     @GetMapping
     public ArrayList<Student> getStudents() {
