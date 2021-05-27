@@ -48,12 +48,15 @@ Vue.component('login-form', {
 
 
 Vue.component('test', {
-    props: ["selectedTest", "questionsAndOptions", "latestResultOfTest"],
+    props: ["selectedTest", "questionsAndOptions"],
     data() {
         return {
             selectedAnswers: [],
-            allQuestionAnswered: true,
-            showResultTrigger: false,
+            triggers: {
+                allQuestionAnswered: true,
+                showResultTrigger: false,
+                testIsComplete: false
+            },
             questionQuantity: 0,
             rightAnswersCount: 0
         }
@@ -63,7 +66,7 @@ Vue.component('test', {
             this.$emit('return-back')
         },
         saveTestResult() {
-            if (this.allQuestionAnswered == false) {
+            if (this.triggers.allQuestionAnswered == false) {
                 fetch('http://localhost:8080/api/answer', {
                     method: 'POST',
                     headers: {
@@ -77,19 +80,19 @@ Vue.component('test', {
                     .then(this.countRightAnswers)
             }
         },
-        checkAnswers() {
+        checkAnswersOnNull() {
             for (let item of this.questionsAndOptions) {
                 if (item.pickedAnswer.optionText == null) {
-                    this.allQuestionAnswered = true
+                    this.triggers.allQuestionAnswered = true
                     break
                 } else {
-                    this.allQuestionAnswered = false
+                    this.triggers.allQuestionAnswered = false
                 }
             }
         },
         showResult() {
-            this.allQuestionAnswered = true
-            this.showResultTrigger = true
+            this.triggers.testIsComplete = true
+            this.triggers.showResultTrigger = true
         },
         countRightAnswers() {
             this.questionQuantity = this.selectedAnswers.length
@@ -104,21 +107,30 @@ Vue.component('test', {
         '<div class="container col-12 bg-light rounded border mt-2 p-2">' +
             '<h1 class="text-center mb-4">{{selectedTest.title}}</h1>' +
             '<div v-for="(questionAndOptions, index) in questionsAndOptions">' +
-                '<h4>{{index + 1}}. {{questionAndOptions.question.questionText}}</h4>' +
-                '<div v-for="option in questionAndOptions.options">' +
-                    '<div :class="{\'bg-success\': (option.right && showResultTrigger)}">' +
-                        '<input class="form-check-input" type="radio" @change="checkAnswers"' +
-                            'v-bind:id="option.optionText"' +
-                            'v-bind:name="questionAndOptions.question.id"' +
-                            'v-bind:value="option" v-model="questionAndOptions.pickedAnswer"> ' +
-                        '<label class="form-check-label fs-5" v-bind:for="option.optionText">{{option.optionText}}</label>' +
+                '<div class="m-2 p-2 rounded-3" ' +
+                        ':class="{\'bg-danger text-white\': (!questionAndOptions.pickedAnswer.right &&' +
+                        ' triggers.showResultTrigger), \'bg-success text-white\':' +
+                        ' (questionAndOptions.pickedAnswer.right && triggers.showResultTrigger)}">' +
+                    '<h4>{{index + 1}}. {{questionAndOptions.question.questionText}}</h4>' +
+                    '<div  v-for="option in questionAndOptions.options">' +
+                        '<div class="rounded p-1">' +
+                            '<input class="form-check-input" type="radio" @change="checkAnswersOnNull" ' +
+                                ':disabled="triggers.testIsComplete"' +
+                                'v-bind:id="option.optionText"' +
+                                'v-bind:name="questionAndOptions.question.id"' +
+                                'v-bind:value="option" v-model="questionAndOptions.pickedAnswer"> ' +
+                            '<label class="form-check-label fs-5" v-bind:for="option.optionText">{{option.optionText}}</label>' +
+                        '</div>' +
                     '</div>' +
                 '</div>' +
             '</div>' +
             '<div class="row justify-content-between m-3">' +
                 '<button class="col-3 btn btn-primary" @click="returnBack">Вернуться назад</button>' +
-                '<span class="col-3 display-4 text-center" v-show="showResultTrigger">{{rightAnswersCount}}/{{questionQuantity}}</span>' +
-                '<button class="col-3 btn btn-primary" @click="saveTestResult" :disabled="allQuestionAnswered">Завершить тест</button>' +
+                '<span class="col-3 text-center display-6" v-show="triggers.showResultTrigger">' +
+                    '{{rightAnswersCount}}/{{questionQuantity}}' +
+                '</span>' +
+                '<button class="col-3 btn btn-primary" @click="saveTestResult" ' +
+                    ':disabled="triggers.allQuestionAnswered || triggers.testIsComplete">Завершить тест</button>' +
            '</div>' +
         '</div>'
 })
