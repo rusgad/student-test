@@ -1,8 +1,7 @@
 package com.example.studenttest.rest;
 
 import com.example.studenttest.model.Student;
-import com.example.studenttest.repository.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.studenttest.service.impl.StudentServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -12,24 +11,24 @@ import java.util.ArrayList;
 @RequestMapping("/api/students")
 public class StudentRestController {
 
-    private StudentRepository studentRepository;
+    private StudentServiceImpl studentService;
 
-    public StudentRestController(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    public StudentRestController(StudentServiceImpl studentService) {
+        this.studentService = studentService;
     }
 
     @GetMapping
     public ArrayList<Student> getStudents() {
-        ArrayList<Student> students = (ArrayList<Student>) studentRepository.findAll();
+        ArrayList<Student> students = (ArrayList<Student>) studentService.findAll();
         return students;
     }
 
     @PostMapping
     public void saveUserIfNotExist(@RequestBody String username) {
-        Student student = studentRepository.findByUsername(username);
+        Student student = studentService.findByUsername(username);
         if (student == null) {
             Student newStudent = new Student(username);
-            studentRepository.save(newStudent);
+            studentService.save(newStudent);
         }
     }
 }

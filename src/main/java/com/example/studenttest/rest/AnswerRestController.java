@@ -4,6 +4,8 @@ import com.example.studenttest.model.Answer;
 import com.example.studenttest.model.Student;
 import com.example.studenttest.repository.AnswerRepository;
 import com.example.studenttest.repository.StudentRepository;
+import com.example.studenttest.service.impl.AnswerServiceImpl;
+import com.example.studenttest.service.impl.StudentServiceImpl;
 import com.example.studenttest.wrappers.AnswerFromUser;
 import com.example.studenttest.wrappers.StudentAndTestId;
 import org.springframework.web.bind.annotation.*;
@@ -14,31 +16,31 @@ import java.util.ArrayList;
 @RequestMapping("/api/answer")
 public class AnswerRestController {
 
-    private AnswerRepository answerRepository;
-    private StudentRepository studentRepository;
+    private AnswerServiceImpl answerService;
+    private StudentServiceImpl studentService;
 
-    public AnswerRestController(AnswerRepository answerRepository, StudentRepository studentRepository) {
-        this.answerRepository = answerRepository;
-        this.studentRepository = studentRepository;
+    public AnswerRestController(AnswerServiceImpl answerService, StudentServiceImpl studentService) {
+        this.answerService = answerService;
+        this.studentService = studentService;
     }
 
     @PostMapping
     public ArrayList<Answer> saveAnswers(@RequestBody ArrayList<AnswerFromUser> selectedAnswers) {
-        Student student = studentRepository.findByUsername(selectedAnswers.get(0).getStudentName());
+        Student student = studentService.findByUsername(selectedAnswers.get(0).getStudentName());
         ArrayList<Answer> answersForSelectedTest = new ArrayList<>();
 
         for (AnswerFromUser answer : selectedAnswers) {
             Answer newAnswer = new Answer(student, answer.getPickedAnswer(),
                     answer.getPickedAnswer().getQuestion().getTest(), answer.getPickedAnswer().getQuestion());
 
-            if (answerRepository.findAnswerByStudentAndQuestion(student, answer.getPickedAnswer()
+            if (answerService.findAnswerByStudentAndQuestion(student, answer.getPickedAnswer()
                     .getQuestion()) == null) {
-                answerRepository.save(newAnswer);
+                answerService.save(newAnswer);
             } else {
-                Answer existingAnswer = answerRepository.findAnswerByStudentAndQuestion
+                Answer existingAnswer = answerService.findAnswerByStudentAndQuestion
                         (student, answer.getPickedAnswer().getQuestion());
                 existingAnswer.setSelectedOption(answer.getPickedAnswer());
-                answerRepository.save(existingAnswer);
+                answerService.save(existingAnswer);
             }
 
             answersForSelectedTest.add(new Answer(student, answer.getPickedAnswer(),
@@ -50,7 +52,7 @@ public class AnswerRestController {
 
     @PostMapping("/latest-result")
     public ArrayList<Answer> getLatestResultOfTest(@RequestBody StudentAndTestId studentAndTestId) {
-        ArrayList<Answer> latestResultOfTest = answerRepository.
+        ArrayList<Answer> latestResultOfTest = answerService.
                 findByStudent_UsernameAndTest_Id(studentAndTestId.getUsername(), studentAndTestId.getTestId());
         return latestResultOfTest;
     }

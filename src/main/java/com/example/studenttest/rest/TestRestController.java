@@ -2,6 +2,8 @@ package com.example.studenttest.rest;
 
 import com.example.studenttest.model.Test;
 import com.example.studenttest.repository.TestRepository;
+import com.example.studenttest.service.TestService;
+import com.example.studenttest.service.impl.TestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,21 +14,21 @@ import java.util.ArrayList;
 @RequestMapping("/api/test")
 public class TestRestController {
 
-    private TestRepository testRepository;
+    private TestServiceImpl testService;
 
-    public TestRestController(TestRepository testRepository) {
-        this.testRepository = testRepository;
+    public TestRestController(TestServiceImpl testService) {
+        this.testService = testService;
     }
 
     @GetMapping
     public ArrayList<Test> getTests() {
-        ArrayList<Test> tests = (ArrayList<Test>) testRepository.findAll();
+        ArrayList<Test> tests = (ArrayList<Test>) testService.findAll();
         return tests;
     }
 
     @GetMapping("/{id}")
     public Test getTest(@PathVariable long id) {
-        Test test = testRepository.findById(id);
+        Test test = testService.findById(id);
         return test;
     }
 }

@@ -1,6 +1,8 @@
 package com.example.studenttest.rest;
 
 import com.example.studenttest.model.Option;
+import com.example.studenttest.service.impl.OptionServiceImpl;
+import com.example.studenttest.service.impl.QuestionServiceImpl;
 import com.example.studenttest.wrappers.QuestionWithOptions;
 import com.example.studenttest.model.Question;
 import com.example.studenttest.repository.OptionRepository;
@@ -15,20 +17,20 @@ import java.util.ArrayList;
 @RequestMapping("/api/question")
 public class QuestionRestController {
 
-    private QuestionRepository questionRepository;
-    private OptionRepository optionRepository;
+    private QuestionServiceImpl questionService;
+    private OptionServiceImpl optionService;
 
-    public QuestionRestController(QuestionRepository questionRepository, OptionRepository optionRepository) {
-        this.questionRepository = questionRepository;
-        this.optionRepository = optionRepository;
+    public QuestionRestController(QuestionServiceImpl questionService, OptionServiceImpl optionService) {
+        this.questionService = questionService;
+        this.optionService = optionService;
     }
 
     @GetMapping("/{testId}")
     public ArrayList<QuestionWithOptions> getQuestions(@PathVariable long testId) {
         ArrayList<QuestionWithOptions> questionWithOptions = new ArrayList<>();
-        ArrayList<Question> questionsFromTest = questionRepository.findByTestId(testId);
+        ArrayList<Question> questionsFromTest = questionService.findByTestId(testId);
         for (Question question : questionsFromTest) {
-            ArrayList<Option> optionsForQuestion = optionRepository.findByQuestionId(question.getId());
+            ArrayList<Option> optionsForQuestion = optionService.findByQuestionId(question.getId());
             Option rightOption = new Option();
             for (Option option : optionsForQuestion) {
                 if (option.isRight()) {
@@ -38,13 +40,5 @@ public class QuestionRestController {
             questionWithOptions.add(new QuestionWithOptions(question, optionsForQuestion, new Option(), rightOption.getOptionText()));
         }
         return questionWithOptions;
-    }
-
-    @GetMapping("/test")
-    public void test() {
-        ArrayList<Option> options = optionRepository.findByQuestionId(1);
-        for (Option option : options) {
-            System.out.println(option.getOptionText());
-        }
     }
 }
