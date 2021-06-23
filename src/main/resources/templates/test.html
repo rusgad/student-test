@@ -9,22 +9,20 @@
 <body>
 
     <div id="app">
-
         <login-form v-if="!triggers.loginIsDone" @login="saveStudentData"></login-form>
         <div v-else>
-            <test v-if="triggers.testIsSelected" :questions-and-options="questionsAndOptions"
+            <test v-if="triggers.testIsSelected" :questions-with-options="questionsWithOptions"
                   :selected-test="selectedTest" @return-back="changeQuestionTrigger"></test>
-            <div class="container col-md-6" v-else>
+            <div class="container col-lg-6" v-else>
                 <h3 class="text-center m-4">Здравствуйте, {{studentName.firstName}} {{studentName.secondName}}</h3>
                 <div v-for="test in tests">
-                    <div class="row bg-light m-2 justify-content-between border rounded">
-                        <h5 class="col-md-10 col-8">{{ test.title }}</h5>
-                        <button class="btn btn-primary col-md-2 col-4" @click="selectTest(test.id)">Пройти тест</button>
+                    <div class="row input-group bg-light m-2 border border-secondary rounded">
+                        <h5 class="col-md-10 d-flex align-items-center m-0 col-8">{{ test.title }}</h5>
+                        <button class="btn btn-primary m-0 col-md-2 col-4" @click="selectTest(test.id)">Пройти тест</button>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>

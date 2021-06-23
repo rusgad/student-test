@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @RequestMapping("/api/students")
 public class StudentRestController {
 
-    private StudentServiceImpl studentService;
+    private final StudentServiceImpl studentService;
 
     public StudentRestController(StudentServiceImpl studentService) {
         this.studentService = studentService;
@@ -19,7 +19,7 @@ public class StudentRestController {
 
     @GetMapping
     public ArrayList<Student> getStudents() {
-        ArrayList<Student> students = (ArrayList<Student>) studentService.findAll();
+        ArrayList<Student> students = studentService.findAll();
         return students;
     }
 

@@ -8,7 +8,6 @@ public class Test {
     @Id
     @GeneratedValue(generator = "test_sequence")
     private long id;
-
     private String title;
 
     public Long getId() {
@@ -30,8 +29,7 @@ public class Test {
     public Test() {
     }
 
-    public Test(Long id, String title) {
-        this.id = id;
+    public Test(String title) {
         this.title = title;
     }
 }

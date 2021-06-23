@@ -4,7 +4,7 @@ import com.example.studenttest.model.Answer;
 import com.example.studenttest.model.Student;
 import com.example.studenttest.service.impl.AnswerServiceImpl;
 import com.example.studenttest.service.impl.StudentServiceImpl;
-import com.example.studenttest.wrappers.AnswerFromUser;
+import com.example.studenttest.wrappers.AnswerFromStudent;
 import com.example.studenttest.wrappers.StudentAndTestId;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +17,8 @@ import java.util.ArrayList;
 @RequestMapping("/api/answer")
 public class AnswerRestController {
 
-    private AnswerServiceImpl answerService;
-    private StudentServiceImpl studentService;
+    private final AnswerServiceImpl answerService;
+    private final StudentServiceImpl studentService;
 
     public AnswerRestController(AnswerServiceImpl answerService, StudentServiceImpl studentService) {
         this.answerService = answerService;
@@ -26,11 +26,11 @@ public class AnswerRestController {
     }
 
     @PostMapping
-    public ArrayList<Answer> saveAnswers(@RequestBody ArrayList<AnswerFromUser> selectedAnswers) {
-        Student student = studentService.findByUsername(selectedAnswers.get(0).getStudentName());
+    public ArrayList<Answer> saveAnswers(@RequestBody ArrayList<AnswerFromStudent> answersFromStudent) {
+        Student student = studentService.findByUsername(answersFromStudent.get(0).getStudentName());
         ArrayList<Answer> answersForSelectedTest = new ArrayList<>();
 
-        for (AnswerFromUser answer : selectedAnswers) {
+        for (AnswerFromStudent answer : answersFromStudent) {
             Answer newAnswer = new Answer(student, answer.getPickedAnswer(),
                     answer.getPickedAnswer().getQuestion().getTest(), answer.getPickedAnswer().getQuestion());
 

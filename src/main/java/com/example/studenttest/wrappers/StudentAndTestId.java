@@ -1,7 +1,5 @@
 package com.example.studenttest.wrappers;
 
-import com.example.studenttest.model.Student;
-
 public class StudentAndTestId {
     private String username;
     private long testId;
@@ -16,17 +14,5 @@ public class StudentAndTestId {
 
     public long getTestId() {
         return testId;
-    }
-
-    public void setTestId(long testId) {
-        this.testId = testId;
-    }
-
-    public StudentAndTestId() {
-    }
-
-    public StudentAndTestId(String username, long testId) {
-        this.username = username;
-        this.testId = testId;
     }
 }

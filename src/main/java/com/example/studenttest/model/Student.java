@@ -8,7 +8,6 @@ public class Student {
     @Id
     @GeneratedValue(generator = "student_sequence")
     private long id;
-
     private String username;
 
     public Long getId() {

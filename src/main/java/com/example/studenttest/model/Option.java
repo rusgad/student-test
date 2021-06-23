@@ -8,10 +8,8 @@ public class Option {
     @Id
     @GeneratedValue(generator = "option_sequence")
     private long id;
-
     private String optionText;
     private boolean isRight;
-
     @ManyToOne
     private Question question;
 
@@ -50,8 +48,7 @@ public class Option {
     public Option() {
     }
 
-    public Option(Long id, String optionText, boolean isRight, Question question) {
-        this.id = id;
+    public Option(String optionText, boolean isRight, Question question) {
         this.optionText = optionText;
         this.isRight = isRight;
         this.question = question;

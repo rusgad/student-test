@@ -8,7 +8,6 @@ public class Answer {
     @Id
     @GeneratedValue(generator = "answer_sequence")
     private long id;
-
     @ManyToOne
     private Student student;
     @ManyToOne

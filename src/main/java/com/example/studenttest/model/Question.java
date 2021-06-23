@@ -8,9 +8,7 @@ public class Question {
     @Id
     @GeneratedValue(generator = "question_sequence")
     private long id;
-
     private String questionText;
-
     @OneToOne
     private Test test;
 
@@ -41,8 +39,7 @@ public class Question {
     public Question() {
     }
 
-    public Question(Long id, String questionText, Test test) {
-        this.id = id;
+    public Question(String questionText, Test test) {
         this.questionText = questionText;
         this.test = test;
     }

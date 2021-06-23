@@ -1,3 +1,6 @@
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Vue.component('login-form', {
     data: function () {
         return {
@@ -15,7 +18,11 @@ Vue.component('login-form', {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: (this.studentName.firstName.trim() + ' ' + this.studentName.secondName.trim() + ' ' + this.studentName.thirdName.trim())
+                body: (
+                    this.studentName.firstName.trim() + ' '
+                    + this.studentName.secondName.trim() + ' '
+                    + this.studentName.thirdName.trim()
+                )
             }).then(() => {
                 this.login()
                 this.studentName.firstName = ''
@@ -46,9 +53,10 @@ Vue.component('login-form', {
         '</div>'
 })
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Vue.component('test', {
-    props: ["selectedTest", "questionsAndOptions"],
+    props: ["selectedTest", "questionsWithOptions"],
     data() {
         return {
             selectedAnswers: [],
@@ -72,7 +80,7 @@ Vue.component('test', {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(this.questionsAndOptions)
+                    body: JSON.stringify(this.questionsWithOptions)
                 })
                     .then(response => response.json())
                     .then(data => this.selectedAnswers = data)
@@ -81,7 +89,7 @@ Vue.component('test', {
             }
         },
         checkAnswersOnNull() {
-            for (let item of this.questionsAndOptions) {
+            for (let item of this.questionsWithOptions) {
                 if (item.pickedAnswer.optionText == null) {
                     this.triggers.allQuestionAnswered = true
                     break
@@ -104,22 +112,24 @@ Vue.component('test', {
         }
     },
     template:
-        '<div class="container col-12 bg-light rounded border mt-2 p-2">' +
+        '<div class="container col-12 bg-light rounded border border-secondary mt-2 p-2">' +
             '<h1 class="text-center mb-4">{{selectedTest.title}}</h1>' +
-            '<div v-for="(questionAndOptions, index) in questionsAndOptions">' +
+            '<div v-for="(questionWithOptions, index) in questionsWithOptions">' +
                 '<div class="m-2 p-2 rounded-3" ' +
-                        ':class="{\'bg-danger text-white\': (!questionAndOptions.pickedAnswer.right &&' +
+                        ':class="{\'bg-danger text-white\': (!questionWithOptions.pickedAnswer.right &&' +
                         ' triggers.showResultTrigger), \'bg-success text-white\':' +
-                        ' (questionAndOptions.pickedAnswer.right && triggers.showResultTrigger)}">' +
-                    '<h4>{{index + 1}}. {{questionAndOptions.question.questionText}}</h4>' +
-                    '<div  v-for="option in questionAndOptions.options">' +
-                        '<div class="rounded p-1">' +
-                            '<input class="form-check-input" type="radio" @change="checkAnswersOnNull" ' +
+                        ' (questionWithOptions.pickedAnswer.right && triggers.showResultTrigger)}">' +
+                    '<h4>{{index + 1}}. {{questionWithOptions.question.questionText}}</h4>' +
+                    '<div  v-for="option in questionWithOptions.options">' +
+                        '<div class="rounded align-items-center d-flex p-1">' +
+                            '<input class="form-check-input col-1 m-1" type="radio" @change="checkAnswersOnNull" ' +
                                 ':disabled="triggers.testIsComplete"' +
                                 'v-bind:id="option.optionText"' +
-                                'v-bind:name="questionAndOptions.question.id"' +
-                                'v-bind:value="option" v-model="questionAndOptions.pickedAnswer"> ' +
-                            '<label class="form-check-label fs-5" v-bind:for="option.optionText">{{option.optionText}}</label>' +
+                                'v-bind:name="questionWithOptions.question.id"' +
+                                'v-bind:value="option" v-model="questionWithOptions.pickedAnswer"> ' +
+                            '<label class="form-check-label col-10 m-1 fs-5" v-bind:for="option.optionText">' +
+                                '{{option.optionText}}' +
+                            '</label>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
@@ -135,13 +145,14 @@ Vue.component('test', {
         '</div>'
 })
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var app = new Vue({
     el: '#app',
     data: {
         tests: [],
         selectedTest: {},
-        questionsAndOptions: [],
+        questionsWithOptions: [],
         latestResultOfTest: [],
         triggers: {
             loginIsDone: false,
@@ -172,8 +183,8 @@ var app = new Vue({
             fetch('http://localhost:8080/api/question/' + this.selectedTest.id)
                 .then(response => response.json())
                 .then(data => {
-                    this.questionsAndOptions = data
-                    for (let item of this.questionsAndOptions) {
+                    this.questionsWithOptions = data
+                    for (let item of this.questionsWithOptions) {
                         item.studentName =
                             this.studentName.firstName + ' ' +
                             this.studentName.secondName + ' ' +

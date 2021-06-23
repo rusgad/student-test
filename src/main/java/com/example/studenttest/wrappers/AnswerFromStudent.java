@@ -1,6 +1,6 @@
 package com.example.studenttest.wrappers;
 
-public class AnswerFromUser extends QuestionWithOptions {
+public class AnswerFromStudent extends QuestionWithOptions {
     private String studentName;
 
     public String getStudentName() {
