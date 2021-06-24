@@ -82,8 +82,6 @@ Vue.component('test', {
                     },
                     body: JSON.stringify(this.questionsWithOptions)
                 })
-                    .then(response => response.json())
-                    .then(data => this.selectedAnswers = data)
                     .then(this.showResult)
                     .then(this.countRightAnswers)
             }
@@ -103,9 +101,9 @@ Vue.component('test', {
             this.triggers.showResultTrigger = true
         },
         countRightAnswers() {
-            this.questionQuantity = this.selectedAnswers.length
-            for (let answer of this.selectedAnswers) {
-                if (answer.selectedOption.right) {
+            this.questionQuantity = this.questionsWithOptions.length
+            for (let answer of this.questionsWithOptions) {
+                if (answer.pickedAnswer.right) {
                     this.rightAnswersCount++
                 }
             }

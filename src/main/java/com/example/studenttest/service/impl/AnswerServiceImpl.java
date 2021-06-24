@@ -31,4 +31,12 @@ public class AnswerServiceImpl implements AnswerService {
     public Answer findAnswerByStudentAndQuestion(Student student, Question question) {
         return answerRepository.findAnswerByStudentAndQuestion(student, question);
     }
+
+    @Override
+    public boolean existByStudentAndQuestion(Student student, Question question) {
+        if (answerRepository.findAnswerByStudentAndQuestion(student, question) == null) {
+            return false;
+        }
+        return true;
+    }
 }

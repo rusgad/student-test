@@ -17,8 +17,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void save(Student student) {
-        studentRepository.save(student);
+    public void saveIfNotExist(String username) {
+        if (!studentRepository.existsByUsername(username)) {
+            Student newStudent = new Student(username);
+            studentRepository.save(newStudent);
+        }
     }
 
     @Override

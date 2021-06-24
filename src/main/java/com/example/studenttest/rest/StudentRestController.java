@@ -24,11 +24,7 @@ public class StudentRestController {
     }
 
     @PostMapping
-    public void saveUserIfNotExist(@RequestBody String username) {
-        Student student = studentService.findByUsername(username);
-        if (student == null) {
-            Student newStudent = new Student(username);
-            studentService.save(newStudent);
-        }
+    public void saveStudentIfNotExist(@RequestBody String username) {
+        studentService.saveIfNotExist(username);
     }
 }

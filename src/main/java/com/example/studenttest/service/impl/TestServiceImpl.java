@@ -19,9 +19,4 @@ public class TestServiceImpl implements TestService {
     public ArrayList<Test> findAll() {
         return (ArrayList<Test>) testRepository.findAll();
     }
-
-    @Override
-    public Test findById(long id) {
-        return testRepository.findById(id);
-    }
 }

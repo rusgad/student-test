@@ -6,6 +6,6 @@ import java.util.ArrayList;
 
 public interface StudentService {
     ArrayList<Student> findAll();
-    void save(Student student);
+    void saveIfNotExist(String username);
     Student findByUsername(String username);
 }

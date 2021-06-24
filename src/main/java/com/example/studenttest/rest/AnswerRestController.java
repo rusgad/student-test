@@ -4,8 +4,8 @@ import com.example.studenttest.model.Answer;
 import com.example.studenttest.model.Student;
 import com.example.studenttest.service.impl.AnswerServiceImpl;
 import com.example.studenttest.service.impl.StudentServiceImpl;
-import com.example.studenttest.wrappers.AnswerFromStudent;
-import com.example.studenttest.wrappers.StudentAndTestId;
+import com.example.studenttest.wrappers.QuestionWithOptions;
+import com.example.studenttest.wrappers.StudentWithTestId;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,35 +26,31 @@ public class AnswerRestController {
     }
 
     @PostMapping
-    public ArrayList<Answer> saveAnswers(@RequestBody ArrayList<AnswerFromStudent> answersFromStudent) {
+    public void saveAnswers(@RequestBody ArrayList<QuestionWithOptions> answersFromStudent) {
         Student student = studentService.findByUsername(answersFromStudent.get(0).getStudentName());
-        ArrayList<Answer> answersForSelectedTest = new ArrayList<>();
 
-        for (AnswerFromStudent answer : answersFromStudent) {
-            Answer newAnswer = new Answer(student, answer.getPickedAnswer(),
-                    answer.getPickedAnswer().getQuestion().getTest(), answer.getPickedAnswer().getQuestion());
+        for (QuestionWithOptions answer : answersFromStudent) {
 
-            if (answerService.findAnswerByStudentAndQuestion(student, answer.getPickedAnswer()
-                    .getQuestion()) == null) {
+            if (!answerService.existByStudentAndQuestion(student, answer.getQuestion())) {
+                Answer newAnswer = new Answer(
+                        student,
+                        answer.getPickedAnswer(),
+                        answer.getQuestion().getTest(),
+                        answer.getQuestion()
+                );
                 answerService.save(newAnswer);
             } else {
-                Answer existingAnswer = answerService.findAnswerByStudentAndQuestion
-                        (student, answer.getPickedAnswer().getQuestion());
+                Answer existingAnswer = answerService.findAnswerByStudentAndQuestion(student, answer.getQuestion());
                 existingAnswer.setSelectedOption(answer.getPickedAnswer());
                 answerService.save(existingAnswer);
             }
-
-            answersForSelectedTest.add(new Answer(student, answer.getPickedAnswer(),
-                    answer.getPickedAnswer().getQuestion().getTest(), answer.getPickedAnswer().getQuestion()));
         }
-
-        return answersForSelectedTest;
     }
 
     @PostMapping("/latest-result")
-    public ArrayList<Answer> getLatestResultOfTest(@RequestBody StudentAndTestId studentAndTestId) {
+    public ArrayList<Answer> getLatestResultOfTest(@RequestBody StudentWithTestId studentWithTestId) {
         ArrayList<Answer> latestResultOfTest = answerService.
-                findByStudent_UsernameAndTest_Id(studentAndTestId.getUsername(), studentAndTestId.getTestId());
+                findByStudent_UsernameAndTest_Id(studentWithTestId.getUsername(), studentWithTestId.getTestId());
         return latestResultOfTest;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.studenttest.wrappers;
 
-public class StudentAndTestId {
+public class StudentWithTestId {
     private String username;
     private long testId;
 
