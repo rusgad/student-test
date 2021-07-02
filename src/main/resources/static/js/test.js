@@ -1,4 +1,3 @@
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Vue.component('login-form', {
@@ -23,12 +22,7 @@ Vue.component('login-form', {
                     + this.studentName.secondName.trim() + ' '
                     + this.studentName.thirdName.trim()
                 )
-            }).then(() => {
-                this.login()
-                this.studentName.firstName = ''
-                this.studentName.secondName = ''
-                this.studentName.thirdName = ''
-            })
+            }).then(() => this.login())
         },
         login() {
             this.$emit('login', this.studentName)
@@ -45,33 +39,108 @@ Vue.component('login-form', {
         }
     },
     template:
-        '<div class="row col-md-4 mx-auto">' +
-            '<input class="form-control mt-2" type="text" v-model="studentName.firstName" placeholder="Фамилия">' +
-            '<input class="form-control mt-2" type="text" v-model="studentName.secondName" placeholder="Имя">' +
-            '<input class="form-control mt-2" type="text" v-model="studentName.thirdName" placeholder="Отчество">' +
-            '<button :disabled="validationError" class="btn btn-primary mt-2" @click="postStudentData">Сохранить</button>' +
+        '<div class="row col-md-6 mx-auto">' +
+            '<input v-model="studentName.firstName" placeholder="Фамилия" class="form-control mt-2" type="text">' +
+            '<input v-model="studentName.secondName" placeholder="Имя" class="form-control mt-2" type="text">' +
+            '<input v-model="studentName.thirdName" placeholder="Отчество" class="form-control mt-2" type="text">' +
+            '<button @click="postStudentData" :disabled="validationError" class="btn btn-primary mt-2">Сохранить</button>' +
         '</div>'
 })
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Vue.component('test', {
-    props: ["selectedTest", "questionsWithOptions"],
+Vue.component('test-section', {
+    props: ['studentName'],
     data() {
         return {
+            tests: [],
+            selectedTest: {},
+            testIsSelected: false
+        }
+    },
+    methods: {
+        fetchTests() {
+            fetch('http://localhost:8080/api/test')
+                .then(response => response.json())
+                .then(data => this.tests = data)
+        },
+        showOrHideTest() {
+            this.testIsSelected = !this.testIsSelected
+        },
+        selectTestAndChangeComponent(testId) {
+            for (let test of this.tests) {
+                if (test.id == testId) {
+                    this.selectedTest = test
+                }
+            }
+            this.showOrHideTest()
+        }
+    },
+    created() {
+        this.fetchTests()
+    },
+    template:
+        '<div v-if="!testIsSelected">' +
+            '<h3 class="text-center m-4">Здравствуйте, {{studentName.firstName}} {{studentName.secondName}}</h3>' +
+            '<div v-for="test in tests">' +
+                '<div class="row input-group bg-light m-2 border border-secondary rounded">' +
+                    '<h5 class="col-md-10 d-flex align-items-center m-0 col-8">{{ test.title }}</h5>' +
+                    '<button @click="selectTestAndChangeComponent(test.id)" class="btn btn-primary m-0 col-md-2 col-4">' +
+                        'Пройти тест' +
+                    '</button>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+        '<test v-else @return-back="showOrHideTest" :student-name="studentName" :selected-test="selectedTest"/>'
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Vue.component('test', {
+    props: ["selectedTest", "studentName"],
+    data() {
+        return {
+            questionsWithOptions: [],
+            latestResultOfTest: [],
             selectedAnswers: [],
             triggers: {
                 allQuestionAnswered: true,
                 showResultTrigger: false,
                 testIsComplete: false
-            },
-            questionQuantity: 0,
-            rightAnswersCount: 0
+            }
         }
     },
     methods: {
         returnBack() {
             this.$emit('return-back')
+        },
+        fetchQuestions() {
+            fetch('http://localhost:8080/api/question/' + this.selectedTest.id)
+                .then(response => response.json())
+                .then(data => {
+                    this.questionsWithOptions = data
+                    for (let item of this.questionsWithOptions) {
+                        item.studentName =
+                            this.studentName.firstName + ' ' +
+                            this.studentName.secondName + ' ' +
+                            this.studentName.thirdName
+                    }
+                })
+        },
+        fetchLatestResult() {
+            fetch('http://localhost:8080/api/answer/latest-result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: (this.studentName.firstName + ' ' + this.studentName.secondName + ' ' +
+                        this.studentName.thirdName),
+                    testId: this.selectedTest.id
+                })
+            })
+                .then(response => response.json())
+                .then(data => this.latestResultOfTest = data)
         },
         saveTestResult() {
             if (this.triggers.allQuestionAnswered == false) {
@@ -101,13 +170,19 @@ Vue.component('test', {
             this.triggers.showResultTrigger = true
         },
         countRightAnswers() {
-            this.questionQuantity = this.questionsWithOptions.length
+            let questionQuantity = this.questionsWithOptions.length
+            let rightAnswersCount = 0
             for (let answer of this.questionsWithOptions) {
                 if (answer.pickedAnswer.right) {
-                    this.rightAnswersCount++
+                    rightAnswersCount++
                 }
             }
+            return rightAnswersCount + '/' + questionQuantity
         }
+    },
+    created() {
+        this.fetchQuestions()
+        this.fetchLatestResult()
     },
     template:
         '<div class="container col-12 bg-light rounded border border-secondary mt-2 p-2">' +
@@ -120,12 +195,13 @@ Vue.component('test', {
                     '<h4>{{index + 1}}. {{questionWithOptions.question.questionText}}</h4>' +
                     '<div  v-for="option in questionWithOptions.options">' +
                         '<div class="rounded align-items-center d-flex p-1">' +
-                            '<input class="form-check-input col-1 m-1" type="radio" @change="checkAnswersOnNull" ' +
-                                ':disabled="triggers.testIsComplete"' +
-                                'v-bind:id="option.optionText"' +
-                                'v-bind:name="questionWithOptions.question.id"' +
-                                'v-bind:value="option" v-model="questionWithOptions.pickedAnswer"> ' +
-                            '<label class="form-check-label col-10 m-1 fs-5" v-bind:for="option.optionText">' +
+                            '<input class="form-check-input col-1 m-1" type="radio" ' +
+                                    '@change="checkAnswersOnNull" ' +
+                                    ':disabled="triggers.testIsComplete"' +
+                                    'v-bind:id="option.optionText"' +
+                                    'v-bind:name="questionWithOptions.question.id"' +
+                                    'v-bind:value="option" v-model="questionWithOptions.pickedAnswer"> ' +
+                            '<label v-bind:for="option.optionText" class="form-check-label col-10 m-1 fs-5">' +
                                 '{{option.optionText}}' +
                             '</label>' +
                         '</div>' +
@@ -133,13 +209,13 @@ Vue.component('test', {
                 '</div>' +
             '</div>' +
             '<div class="row justify-content-between m-3">' +
-                '<button class="col-3 btn btn-primary" @click="returnBack">Вернуться назад</button>' +
-                '<span class="col-3 text-center display-6" v-show="triggers.showResultTrigger">' +
-                    '{{rightAnswersCount}}/{{questionQuantity}}' +
+                '<button @click="returnBack" class="col-3 btn btn-primary">Вернуться назад</button>' +
+                '<span v-show="triggers.showResultTrigger" class="col-3 text-center display-6">' +
+                    '{{countRightAnswers()}}' +
                 '</span>' +
-                '<button class="col-3 btn btn-primary" @click="saveTestResult" ' +
-                    ':disabled="triggers.allQuestionAnswered || triggers.testIsComplete">Завершить тест</button>' +
-           '</div>' +
+                '<button @click="saveTestResult" :disabled="triggers.allQuestionAnswered || triggers.testIsComplete"' +
+                        ' class="col-3 btn btn-primary">Завершить тест</button>' +
+            '</div>' +
         '</div>'
 })
 
@@ -148,14 +224,7 @@ Vue.component('test', {
 var app = new Vue({
     el: '#app',
     data: {
-        tests: [],
-        selectedTest: {},
-        questionsWithOptions: [],
-        latestResultOfTest: [],
-        triggers: {
-            loginIsDone: false,
-            testIsSelected: false
-        },
+        userIsLoggedIn: false,
         studentName: {
             firstName: '',
             secondName: '',
@@ -163,59 +232,14 @@ var app = new Vue({
         }
     },
     methods: {
-        fetchTests() {
-            fetch('http://localhost:8080/api/test')
-                .then(response => response.json())
-                .then(data => this.tests = data)
-        },
-        selectTest(testId) {
-            for (let test of this.tests) {
-                if (test.id === testId) {
-                    this.selectedTest = test
-                }
-            }
-            this.fetchQuestions()
-            this.changeQuestionTrigger()
-        },
-        fetchQuestions() {
-            fetch('http://localhost:8080/api/question/' + this.selectedTest.id)
-                .then(response => response.json())
-                .then(data => {
-                    this.questionsWithOptions = data
-                    for (let item of this.questionsWithOptions) {
-                        item.studentName =
-                            this.studentName.firstName + ' ' +
-                            this.studentName.secondName + ' ' +
-                            this.studentName.thirdName
-                    }
-                })
-                .then(this.fetchLatestResult)
-        },
-        changeQuestionTrigger() {
-            this.triggers.testIsSelected = !this.triggers.testIsSelected
-        },
-        saveStudentData(studentName) {
+        saveStudentNameAndChangeComponent(studentName) {
             this.studentName.firstName = studentName.firstName.trim()
             this.studentName.secondName = studentName.secondName.trim()
             this.studentName.thirdName = studentName.thirdName.trim()
-            this.triggers.loginIsDone = true
+            this.loginUser()
         },
-        fetchLatestResult() {
-            fetch('http://localhost:8080/api/answer/latest-result', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: (this.studentName.firstName + ' ' + this.studentName.secondName + ' ' + this.studentName.thirdName),
-                    testId: this.selectedTest.id
-                })
-            })
-                .then(response => response.json())
-                .then(data => this.latestResultOfTest = data)
+        loginUser() {
+            this.userIsLoggedIn = true
         }
-    },
-    created() {
-        this.fetchTests()
     }
 })
