@@ -162,9 +162,9 @@ Vue.component('test', {
             this.triggers.showResultTrigger = false
             this.triggers.testIsComplete = false
             this.triggers.allQuestionAnswered = false
-            this.resetLatestResult()
+            this.resetAnswers()
         },
-        resetLatestResult() {
+        resetAnswers() {
             for (let item of this.questionsWithOptions) {
                 item.pickedAnswer = {
                     id: 0,
@@ -216,7 +216,7 @@ Vue.component('test', {
         this.fetchQuestionsWithOptionsAndLatestResult()
     },
     template:
-        '<div class="container col-12 bg-light rounded border border-secondary mt-2 p-2">' +
+        '<div class="container col-12 bg-light rounded border border-secondary mt-2 mb-2 p-2">' +
             '<h1 class="text-center mb-4">{{selectedTest.title}}</h1>' +
             '<div v-for="(questionWithOptions, index) in questionsWithOptions">' +
                 '<div class="m-2 p-2 rounded-3" ' +

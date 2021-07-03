@@ -51,9 +51,4 @@ public class AnswerRestController {
                 findByStudent_UsernameAndTest_Id(studentWithTestId.getUsername(), studentWithTestId.getTestId());
         return latestResultOfTest;
     }
-
-    @DeleteMapping("/latest-result/{username}/{testId}")
-    public void deleteLatestResult(@PathVariable String username, @PathVariable long testId) {
-        answerService.deleteAnswersByStudent_IdAndTest_Id(username, testId);
-    }
 }
