@@ -100,7 +100,8 @@ Vue.component('test', {
             triggers: {
                 allQuestionAnswered: false,
                 showResultTrigger: false,
-                testIsComplete: false
+                testIsComplete: false,
+                restartIsEnable: false
             }
         }
     },
@@ -139,16 +140,19 @@ Vue.component('test', {
             })
                 .then(response => response.json())
                 .then(data => this.latestResultOfTest = data)
+                .then(this.checkLatestResultOnExist)
                 .then(this.showLatestResultIfExists)
         },
-        latestResultIsExist() {
+        checkLatestResultOnExist() {
             if (this.latestResultOfTest.length == 0) {
-                return false
+                this.triggers.restartIsEnable = false
+            } else {
+                this.triggers.restartIsEnable = true
+                console.log('yes')
             }
-            return true
         },
         showLatestResultIfExists() {
-            if (this.latestResultIsExist()) {
+            if (this.triggers.restartIsEnable) {
                 let itemIndex = 0
                 for (let item of this.questionsWithOptions) {
                     item.pickedAnswer = this.latestResultOfTest[itemIndex].selectedOption
@@ -162,6 +166,7 @@ Vue.component('test', {
             this.triggers.showResultTrigger = false
             this.triggers.testIsComplete = false
             this.triggers.allQuestionAnswered = false
+            this.triggers.restartIsEnable = false
             this.resetAnswers()
         },
         resetAnswers() {
@@ -190,6 +195,7 @@ Vue.component('test', {
         showResult() {
             this.triggers.testIsComplete = true
             this.triggers.showResultTrigger = true
+            this.triggers.restartIsEnable = true
         },
         checkAnswersOnNull() {
             for (let item of this.questionsWithOptions) {
@@ -244,7 +250,7 @@ Vue.component('test', {
                 '<span v-show="triggers.showResultTrigger" class="col-3 text-center display-6">' +
                     '{{countRightAnswers()}}' +
                 '</span>' +
-                '<button v-if="!latestResultIsExist()" ' +
+                '<button v-if="!triggers.restartIsEnable" ' +
                         '@click="saveTestResult" :disabled="!triggers.allQuestionAnswered || triggers.testIsComplete"' +
                         ' class="col-3 btn btn-primary">Завершить тест</button>' +
                 '<button v-else @click="restartTest" class="col-3 btn btn-primary">Пройти заново</button>' +
