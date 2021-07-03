@@ -1,5 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 Vue.component('login-form', {
     data: function () {
         return {
@@ -47,8 +45,6 @@ Vue.component('login-form', {
         '</div>'
 })
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 Vue.component('test-section', {
     props: ['studentName'],
     data() {
@@ -94,8 +90,6 @@ Vue.component('test-section', {
         '<test v-else @return-back="showOrHideTest" :student-name="studentName" :selected-test="selectedTest"/>'
 })
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 Vue.component('test', {
     props: ["selectedTest", "studentName"],
     data() {
@@ -104,7 +98,7 @@ Vue.component('test', {
             latestResultOfTest: [],
             selectedAnswers: [],
             triggers: {
-                allQuestionAnswered: true,
+                allQuestionAnswered: false,
                 showResultTrigger: false,
                 testIsComplete: false
             }
@@ -114,7 +108,7 @@ Vue.component('test', {
         returnBack() {
             this.$emit('return-back')
         },
-        fetchQuestions() {
+        fetchQuestionsWithOptionsAndLatestResult() {
             fetch('http://localhost:8080/api/question/' + this.selectedTest.id)
                 .then(response => response.json())
                 .then(data => {
@@ -126,6 +120,7 @@ Vue.component('test', {
                             this.studentName.thirdName
                     }
                 })
+                    .then(this.fetchLatestResult)
         },
         fetchLatestResult() {
             fetch('http://localhost:8080/api/answer/latest-result', {
@@ -134,16 +129,53 @@ Vue.component('test', {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: (this.studentName.firstName + ' ' + this.studentName.secondName + ' ' +
-                        this.studentName.thirdName),
+                    username: (
+                        this.studentName.firstName + ' ' +
+                        this.studentName.secondName + ' ' +
+                        this.studentName.thirdName
+                    ),
                     testId: this.selectedTest.id
                 })
             })
                 .then(response => response.json())
                 .then(data => this.latestResultOfTest = data)
+                .then(this.showLatestResultIfExists)
+        },
+        latestResultIsExist() {
+            if (this.latestResultOfTest.length == 0) {
+                return false
+            }
+            return true
+        },
+        showLatestResultIfExists() {
+            if (this.latestResultIsExist()) {
+                let itemIndex = 0
+                for (let item of this.questionsWithOptions) {
+                    item.pickedAnswer = this.latestResultOfTest[itemIndex].selectedOption
+                    itemIndex++
+                }
+                this.showResult()
+            }
+        },
+        restartTest() {
+            this.latestResultOfTest = []
+            this.triggers.showResultTrigger = false
+            this.triggers.testIsComplete = false
+            this.triggers.allQuestionAnswered = false
+            this.resetLatestResult()
+        },
+        resetLatestResult() {
+            for (let item of this.questionsWithOptions) {
+                item.pickedAnswer = {
+                    id: 0,
+                    optionText: null,
+                    question: null,
+                    right: null
+                }
+            }
         },
         saveTestResult() {
-            if (this.triggers.allQuestionAnswered == false) {
+            if (this.triggers.allQuestionAnswered == true) {
                 fetch('http://localhost:8080/api/answer', {
                     method: 'POST',
                     headers: {
@@ -155,19 +187,19 @@ Vue.component('test', {
                     .then(this.countRightAnswers)
             }
         },
-        checkAnswersOnNull() {
-            for (let item of this.questionsWithOptions) {
-                if (item.pickedAnswer.optionText == null) {
-                    this.triggers.allQuestionAnswered = true
-                    break
-                } else {
-                    this.triggers.allQuestionAnswered = false
-                }
-            }
-        },
         showResult() {
             this.triggers.testIsComplete = true
             this.triggers.showResultTrigger = true
+        },
+        checkAnswersOnNull() {
+            for (let item of this.questionsWithOptions) {
+                if (item.pickedAnswer.optionText == null) {
+                    this.triggers.allQuestionAnswered = false
+                    break
+                } else {
+                    this.triggers.allQuestionAnswered = true
+                }
+            }
         },
         countRightAnswers() {
             let questionQuantity = this.questionsWithOptions.length
@@ -181,8 +213,7 @@ Vue.component('test', {
         }
     },
     created() {
-        this.fetchQuestions()
-        this.fetchLatestResult()
+        this.fetchQuestionsWithOptionsAndLatestResult()
     },
     template:
         '<div class="container col-12 bg-light rounded border border-secondary mt-2 p-2">' +
@@ -213,13 +244,13 @@ Vue.component('test', {
                 '<span v-show="triggers.showResultTrigger" class="col-3 text-center display-6">' +
                     '{{countRightAnswers()}}' +
                 '</span>' +
-                '<button @click="saveTestResult" :disabled="triggers.allQuestionAnswered || triggers.testIsComplete"' +
+                '<button v-if="!latestResultIsExist()" ' +
+                        '@click="saveTestResult" :disabled="!triggers.allQuestionAnswered || triggers.testIsComplete"' +
                         ' class="col-3 btn btn-primary">Завершить тест</button>' +
+                '<button v-else @click="restartTest" class="col-3 btn btn-primary">Пройти заново</button>' +
             '</div>' +
         '</div>'
 })
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var app = new Vue({
     el: '#app',

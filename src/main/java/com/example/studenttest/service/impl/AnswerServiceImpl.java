@@ -39,4 +39,9 @@ public class AnswerServiceImpl implements AnswerService {
         }
         return true;
     }
+
+    @Override
+    public void deleteAnswersByStudent_IdAndTest_Id(String username, long testId) {
+        answerRepository.deleteAnswersByStudent_IdAndTest_Id(username, testId);
+    }
 }

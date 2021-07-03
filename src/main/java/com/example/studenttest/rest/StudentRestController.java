@@ -22,6 +22,12 @@ public class StudentRestController {
         return students;
     }
 
+    @GetMapping("/{username}")
+    public Student getStudent(@PathVariable String username) {
+        Student student = studentService.findByUsername(username);
+        return student;
+    }
+
     @PostMapping
     public void saveStudentIfNotExist(@RequestBody String username) {
         studentService.saveIfNotExist(username);

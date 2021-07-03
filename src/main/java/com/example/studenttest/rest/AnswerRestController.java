@@ -2,10 +2,12 @@ package com.example.studenttest.rest;
 
 import com.example.studenttest.model.Answer;
 import com.example.studenttest.model.Student;
+import com.example.studenttest.repository.AnswerRepository;
 import com.example.studenttest.service.impl.AnswerServiceImpl;
 import com.example.studenttest.service.impl.StudentServiceImpl;
 import com.example.studenttest.wrappers.QuestionWithOptions;
 import com.example.studenttest.wrappers.StudentWithTestId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -13,7 +15,6 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/api/answer")
 public class AnswerRestController {
-
     private final AnswerServiceImpl answerService;
     private final StudentServiceImpl studentService;
 
@@ -49,5 +50,10 @@ public class AnswerRestController {
         ArrayList<Answer> latestResultOfTest = answerService.
                 findByStudent_UsernameAndTest_Id(studentWithTestId.getUsername(), studentWithTestId.getTestId());
         return latestResultOfTest;
+    }
+
+    @DeleteMapping("/latest-result/{username}/{testId}")
+    public void deleteLatestResult(@PathVariable String username, @PathVariable long testId) {
+        answerService.deleteAnswersByStudent_IdAndTest_Id(username, testId);
     }
 }

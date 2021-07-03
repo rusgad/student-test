@@ -11,4 +11,5 @@ public interface AnswerService {
     ArrayList<Answer> findByStudent_UsernameAndTest_Id(String username, long testId);
     boolean existByStudentAndQuestion(Student student, Question question);
     Answer findAnswerByStudentAndQuestion(Student student, Question question);
+    void deleteAnswersByStudent_IdAndTest_Id(String username, long testId);
 }

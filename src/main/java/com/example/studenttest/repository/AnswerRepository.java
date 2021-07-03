@@ -11,5 +11,6 @@ import java.util.ArrayList;
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
     ArrayList<Answer> findByStudent_UsernameAndTest_Id(String username, long testId);
+    void deleteAnswersByStudent_IdAndTest_Id(String username, long testId);
     Answer findAnswerByStudentAndQuestion(Student student, Question question);
 }
