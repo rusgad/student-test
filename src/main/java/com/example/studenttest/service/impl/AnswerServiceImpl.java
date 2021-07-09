@@ -4,7 +4,9 @@ import com.example.studenttest.model.Answer;
 import com.example.studenttest.model.Question;
 import com.example.studenttest.model.Student;
 import com.example.studenttest.repository.AnswerRepository;
+import com.example.studenttest.repository.StudentRepository;
 import com.example.studenttest.service.AnswerService;
+import com.example.studenttest.model.QuestionWithOptions;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,9 +14,11 @@ import java.util.ArrayList;
 @Service
 public class AnswerServiceImpl implements AnswerService {
     private AnswerRepository answerRepository;
+    private StudentRepository studentRepository;
 
-    public AnswerServiceImpl(AnswerRepository answerRepository) {
+    public AnswerServiceImpl(AnswerRepository answerRepository, StudentRepository studentRepository) {
         this.answerRepository = answerRepository;
+        this.studentRepository = studentRepository;
     }
 
     @Override
@@ -38,5 +42,25 @@ public class AnswerServiceImpl implements AnswerService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void saveAnswers(ArrayList<QuestionWithOptions> answersFromStudent) {
+        Student student = studentRepository.findByUsername(answersFromStudent.get(0).getStudentName());
+        for (QuestionWithOptions answer : answersFromStudent) {
+            if (!existByStudentAndQuestion(student, answer.getQuestion())) {
+                Answer newAnswer = new Answer(
+                        student,
+                        answer.getPickedAnswer(),
+                        answer.getQuestion().getTest(),
+                        answer.getQuestion()
+                );
+                save(newAnswer);
+            } else {
+                Answer existingAnswer = findAnswerByStudentAndQuestion(student, answer.getQuestion());
+                existingAnswer.setSelectedOption(answer.getPickedAnswer());
+                save(existingAnswer);
+            }
+        }
     }
 }

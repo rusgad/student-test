@@ -23,7 +23,7 @@ public class StudentServiceImpl implements StudentService {
             studentRepository.save(newStudent);
         }
     }
-
+//ControllerAdvice
     @Override
     public ArrayList<Student> findAll() {
         return (ArrayList<Student>) studentRepository.findAll();
