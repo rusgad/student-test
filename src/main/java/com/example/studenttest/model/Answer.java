@@ -11,7 +11,7 @@ public class Answer {
     @ManyToOne
     private Student student;
     @ManyToOne
-    private Option selectedOption;
+    private Option pickedOption;
     @ManyToOne
     private Test test;
     @ManyToOne
@@ -33,12 +33,12 @@ public class Answer {
         this.student = student;
     }
 
-    public Option getSelectedOption() {
-        return selectedOption;
+    public Option getPickedOption() {
+        return pickedOption;
     }
 
-    public void setSelectedOption(Option selectedOption) {
-        this.selectedOption = selectedOption;
+    public void setPickedOption(Option selectedOption) {
+        this.pickedOption = selectedOption;
     }
 
     public Test getTest() {
@@ -60,9 +60,9 @@ public class Answer {
     public Answer() {
     }
 
-    public Answer(Student student, Option selectedOption, Test test, Question question) {
+    public Answer(Student student, Option pickedOption, Test test, Question question) {
         this.student = student;
-        this.selectedOption = selectedOption;
+        this.pickedOption = pickedOption;
         this.test = test;
         this.question = question;
     }

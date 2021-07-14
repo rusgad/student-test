@@ -1,5 +1,6 @@
 package com.example.studenttest.service.impl;
 
+import com.example.studenttest.dto.OptionDto;
 import com.example.studenttest.model.Option;
 import com.example.studenttest.repository.OptionRepository;
 import com.example.studenttest.service.OptionService;
@@ -16,7 +17,13 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
-    public ArrayList<Option> findByQuestionId(long id) {
-        return optionRepository.findByQuestionId(id);
+    public ArrayList<OptionDto> findByQuestionId(long id) {
+        ArrayList<Option> options = optionRepository.findByQuestionId(id);
+        ArrayList<OptionDto> optionDtoList = new ArrayList<>();
+        for (Option option : options) {
+            OptionDto optionDto = new OptionDto(option.getId(), option.getOptionText(), option.getQuestion());
+            optionDtoList.add(optionDto);
+        }
+        return optionDtoList;
     }
 }

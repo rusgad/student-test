@@ -6,8 +6,6 @@ import com.example.studenttest.repository.StudentRepository;
 import com.example.studenttest.service.StudentService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-
 @Service
 public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;

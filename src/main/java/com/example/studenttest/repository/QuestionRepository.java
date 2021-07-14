@@ -8,5 +8,5 @@ import java.util.ArrayList;
 
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    ArrayList<Question> findByTestId(long id);
+    ArrayList<Question> findAllByTestId(long id);
 }

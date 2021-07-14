@@ -1,11 +1,11 @@
 package com.example.studenttest.service;
 
+import com.example.studenttest.dto.QuestionDto;
 import com.example.studenttest.model.Question;
-import com.example.studenttest.dto.QuestionWithOptionsDto;
 
 import java.util.ArrayList;
 
 public interface QuestionService {
-    ArrayList<Question> findByTestId(long id);
-    ArrayList<QuestionWithOptionsDto> getQuestionsByTestId(long testId);
+    ArrayList<QuestionDto> findByTestId(long id);
+//    ArrayList<QuestionWithOptionsDto> getQuestionsByTestId(long testId);
 }

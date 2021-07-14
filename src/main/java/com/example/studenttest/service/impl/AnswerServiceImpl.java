@@ -6,7 +6,6 @@ import com.example.studenttest.model.Student;
 import com.example.studenttest.repository.AnswerRepository;
 import com.example.studenttest.repository.StudentRepository;
 import com.example.studenttest.service.AnswerService;
-import com.example.studenttest.dto.QuestionWithOptionsDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,23 +43,23 @@ public class AnswerServiceImpl implements AnswerService {
         return true;
     }
 
-    @Override
-    public void saveAnswers(ArrayList<QuestionWithOptionsDto> answersFromStudent) {
-        Student student = studentRepository.findByUsername(answersFromStudent.get(0).getStudentName());
-        for (QuestionWithOptionsDto answer : answersFromStudent) {
-            if (!existByStudentAndQuestion(student, answer.getQuestion())) {
-                Answer newAnswer = new Answer(
-                        student,
-                        answer.getPickedAnswer(),
-                        answer.getQuestion().getTest(),
-                        answer.getQuestion()
-                );
-                save(newAnswer);
-            } else {
-                Answer existingAnswer = findAnswerByStudentAndQuestion(student, answer.getQuestion());
-                existingAnswer.setSelectedOption(answer.getPickedAnswer());
-                save(existingAnswer);
-            }
-        }
-    }
+//    @Override
+//    public void saveAnswers(ArrayList<QuestionWithOptionsDto> answersFromStudent) {
+//        Student student = studentRepository.findByUsername(answersFromStudent.get(0).getStudentName());
+//        for (QuestionWithOptionsDto answer : answersFromStudent) {
+//            if (!existByStudentAndQuestion(student, answer.getQuestion())) {
+//                Answer newAnswer = new Answer(
+//                        student,
+//                        answer.getPickedAnswer(),
+//                        answer.getQuestion().getTest(),
+//                        answer.getQuestion()
+//                );
+//                save(newAnswer);
+//            } else {
+//                Answer existingAnswer = findAnswerByStudentAndQuestion(student, answer.getQuestion());
+//                existingAnswer.setPickedOption();
+//                save(existingAnswer);
+//            }
+//        }
+//    }
 }

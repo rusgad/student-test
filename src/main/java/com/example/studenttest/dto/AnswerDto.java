@@ -8,57 +8,46 @@ import com.example.studenttest.model.Test;
 import javax.persistence.ManyToOne;
 
 public class AnswerDto {
-    private long id;
-    private Student student;
-    private Option selectedOption;
-    private Test test;
-    private Question question;
+    private StudentDto student;
+    private OptionDto selectedOption;
+    private TestDto test;
+    private QuestionDto question;
 
-    public AnswerDto(long id, Student student, Option selectedOption, Test test, Question question) {
-        this.id = id;
-        this.student = student;
+    public AnswerDto(OptionDto selectedOption, TestDto test, QuestionDto question) {
         this.selectedOption = selectedOption;
         this.test = test;
         this.question = question;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Student getStudent() {
+    public StudentDto getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setStudent(StudentDto student) {
         this.student = student;
     }
 
-    public Option getSelectedOption() {
+    public OptionDto getSelectedOption() {
         return selectedOption;
     }
 
-    public void setSelectedOption(Option selectedOption) {
+    public void setSelectedOption(OptionDto selectedOption) {
         this.selectedOption = selectedOption;
     }
 
-    public Test getTest() {
+    public TestDto getTest() {
         return test;
     }
 
-    public void setTest(Test test) {
+    public void setTest(TestDto test) {
         this.test = test;
     }
 
-    public Question getQuestion() {
+    public QuestionDto getQuestion() {
         return question;
     }
 
-    public void setQuestion(Question question) {
+    public void setQuestion(QuestionDto question) {
         this.question = question;
     }
 }

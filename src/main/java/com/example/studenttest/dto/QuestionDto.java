@@ -7,7 +7,7 @@ public class QuestionDto {
     private String questionText;
     private Test test;
 
-    public QuestionDto(long id, String questionText, Test test) {
+    public QuestionDto(Long id, String questionText, Test test) {
         this.id = id;
         this.questionText = questionText;
         this.test = test;

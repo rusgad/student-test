@@ -1,8 +1,8 @@
 package com.example.studenttest.rest;
 
-import com.example.studenttest.service.OptionService;
+import com.example.studenttest.dto.QuestionDto;
+import com.example.studenttest.model.Question;
 import com.example.studenttest.service.QuestionService;
-import com.example.studenttest.dto.QuestionWithOptionsDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +19,8 @@ public class QuestionRestController {
     }
 
     @GetMapping("/{testId}")
-    public ArrayList<QuestionWithOptionsDto> getQuestionsByTestId(@PathVariable long testId) {
-        ArrayList<QuestionWithOptionsDto> questionsWithOptionsDto = questionService.getQuestionsByTestId(testId);
-        return questionsWithOptionsDto;
+    public ArrayList<QuestionDto> getQuestionsByTestId(@PathVariable long testId) {
+        ArrayList<QuestionDto> questionDtoList = questionService.findByTestId(testId);
+        return questionDtoList;
     }
 }

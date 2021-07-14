@@ -5,16 +5,14 @@ import com.example.studenttest.model.Question;
 public class OptionDto {
     private long id;
     private String optionText;
-    private boolean isRight;
     private Question question;
 
     public OptionDto() {
     }
 
-    public OptionDto(long id, String optionText, boolean isRight, Question question) {
+    public OptionDto(long id, String optionText, Question question) {
         this.id = id;
         this.optionText = optionText;
-        this.isRight = isRight;
         this.question = question;
     }
 
@@ -32,14 +30,6 @@ public class OptionDto {
 
     public void setOptionText(String optionText) {
         this.optionText = optionText;
-    }
-
-    public boolean isRight() {
-        return isRight;
-    }
-
-    public void setRight(boolean right) {
-        isRight = right;
     }
 
     public Question getQuestion() {

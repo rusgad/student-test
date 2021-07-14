@@ -1,12 +1,14 @@
 Vue.component('login-form', {
     data: function () {
         return {
-            studentName: {
-                firstName: '',
-                secondName: '',
-                thirdName: ''
-            },
-            password: ''
+            student: {
+                studentName: {
+                    firstName: '',
+                    secondName: '',
+                    thirdName: ''
+                },
+                password: ''
+            }
         }
     },
     methods: {
@@ -19,22 +21,24 @@ Vue.component('login-form', {
                 body: (
                     JSON.stringify(
                         {
-                            username: this.studentName.firstName.trim() + ' ' + this.studentName.secondName.trim() + ' '
-                                + this.studentName.thirdName.trim(),
-                            password: this.password
+                            username:
+                                this.student.studentName.firstName.trim() + ' ' +
+                                this.student.studentName.secondName.trim() + ' ' +
+                                this.student.studentName.thirdName.trim(),
+                            password: this.student.password
                         }
                     )
                 )
             }).then(() => this.login())
         },
         login() {
-            this.$emit('login', this.studentName)
+            this.$emit('login', this.student)
         }
     },
     computed: {
         validationError() {
-            if ((this.studentName.firstName.trim() == '') || (this.studentName.secondName.trim() == '') ||
-                (this.studentName.thirdName.trim() == '') || (this.password.trim() == '')) {
+            if ((this.student.studentName.firstName.trim() == '') || (this.student.studentName.secondName.trim() == '') ||
+                (this.student.studentName.thirdName.trim() == '') || (this.student.password.trim() == '')) {
                 return true
             } else {
                 return false
@@ -43,16 +47,16 @@ Vue.component('login-form', {
     },
     template:
         '<div class="row col-md-6 mx-auto">' +
-            '<input v-model="studentName.firstName" placeholder="Фамилия" class="form-control mt-2" type="text">' +
-            '<input v-model="studentName.secondName" placeholder="Имя" class="form-control mt-2" type="text">' +
-            '<input v-model="studentName.thirdName" placeholder="Отчество" class="form-control mt-2" type="text">' +
-            '<input v-model="password" placeholder="Пароль" class="form-control mt-2" type="text">' +
+            '<input v-model="student.studentName.firstName" placeholder="Фамилия" class="form-control mt-2" type="text">' +
+            '<input v-model="student.studentName.secondName" placeholder="Имя" class="form-control mt-2" type="text">' +
+            '<input v-model="student.studentName.thirdName" placeholder="Отчество" class="form-control mt-2" type="text">' +
+            '<input v-model="student.password" placeholder="Пароль" class="form-control mt-2" type="text">' +
             '<button @click="postStudentData" :disabled="validationError" class="btn btn-primary mt-2">Сохранить</button>' +
         '</div>'
 })
 
 Vue.component('test-section', {
-    props: ['studentName'],
+    props: ['student'],
     data() {
         return {
             tests: [],
@@ -83,7 +87,9 @@ Vue.component('test-section', {
     },
     template:
         '<div v-if="!testIsSelected">' +
-            '<h3 class="text-center m-4">Здравствуйте, {{studentName.firstName}} {{studentName.secondName}}</h3>' +
+            '<h3 class="text-center m-4">' +
+                'Здравствуйте, {{student.studentName.firstName}} {{student.studentName.secondName}}' +
+            '</h3>' +
             '<div v-for="test in tests">' +
                 '<div class="row input-group bg-light m-2 border border-secondary rounded">' +
                     '<h5 class="col-md-10 d-flex align-items-center m-0 col-8">{{ test.title }}</h5>' +
@@ -207,17 +213,21 @@ var app = new Vue({
     el: '#app',
     data: {
         userIsLoggedIn: false,
-        studentName: {
-            firstName: '',
-            secondName: '',
-            thirdName: ''
+        student: {
+            studentName: {
+                firstName: '',
+                secondName: '',
+                thirdName: ''
+            },
+            password: ''
         }
     },
     methods: {
-        saveStudentNameAndChangeComponent(studentName) {
-            this.studentName.firstName = studentName.firstName.trim()
-            this.studentName.secondName = studentName.secondName.trim()
-            this.studentName.thirdName = studentName.thirdName.trim()
+        saveStudentNameAndChangeComponent(student) {
+            this.student.studentName.firstName = student.studentName.firstName
+            this.student.studentName.secondName = student.studentName.secondName
+            this.student.studentName.thirdName = student.studentName.thirdName
+            this.student.password = student.password
             this.loginUser()
         },
         loginUser() {

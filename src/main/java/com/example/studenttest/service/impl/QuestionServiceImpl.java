@@ -1,11 +1,12 @@
 package com.example.studenttest.service.impl;
 
+import com.example.studenttest.dto.QuestionDto;
+import com.example.studenttest.mapper.QuestionMapper;
 import com.example.studenttest.model.Option;
 import com.example.studenttest.model.Question;
 import com.example.studenttest.repository.QuestionRepository;
 import com.example.studenttest.service.OptionService;
 import com.example.studenttest.service.QuestionService;
-import com.example.studenttest.dto.QuestionWithOptionsDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,27 +22,33 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public ArrayList<Question> findByTestId(long id) {
-        return questionRepository.findByTestId(id);
+    public ArrayList<QuestionDto> findByTestId(long id) {
+        ArrayList<Question> questions = questionRepository.findAllByTestId(id);
+        ArrayList<QuestionDto> questionDtoList = new ArrayList<>();
+        for (Question question : questions) {
+            QuestionDto questionDto = new QuestionDto(question.getId(), question.getQuestionText(), question.getTest());
+            questionDtoList.add(questionDto);
+        }
+        return questionDtoList;
     }
 
-    @Override
-    public ArrayList<QuestionWithOptionsDto> getQuestionsByTestId(long testId) {
-        ArrayList<QuestionWithOptionsDto> questionWithOptionsDtoList = new ArrayList<>();
-        ArrayList<Question> questionsFromTest = findByTestId(testId);
-        for (Question question : questionsFromTest) {
-            ArrayList<Option> optionsForQuestion = optionService.findByQuestionId(question.getId());
-            Option rightOption = new Option();
-            Option pickedOption = new Option();
-            for (Option option : optionsForQuestion) {
-                if (option.isRight()) {
-                    rightOption = option;
-                }
-            }
-            questionWithOptionsDtoList.add(
-                    new QuestionWithOptionsDto(question, optionsForQuestion, pickedOption, rightOption.getOptionText())
-            );
-        }
-        return questionWithOptionsDtoList;
-    }
+//    @Override
+//    public ArrayList<Question> getQuestionsByTestId(long testId) {
+//        ArrayList<QuestionWithOptionsDto> questionWithOptionsDtoList = new ArrayList<>();
+//        ArrayList<Question> questionsFromTest = findByTestId(testId);
+//        for (Question question : questionsFromTest) {
+//            ArrayList<Option> optionsForQuestion = optionService.findByQuestionId(question.getId());
+//            Option rightOption = new Option();
+//            Option pickedOption = new Option();
+//            for (Option option : optionsForQuestion) {
+//                if (option.isRight()) {
+//                    rightOption = option;
+//                }
+//            }
+//            questionWithOptionsDtoList.add(
+//                    new QuestionWithOptionsDto(question, optionsForQuestion, pickedOption, rightOption.getOptionText())
+//            );
+//        }
+//        return questionWithOptionsDtoList;
+//    }
 }

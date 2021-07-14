@@ -39,7 +39,8 @@ public class Question {
     public Question() {
     }
 
-    public Question(String questionText, Test test) {
+    public Question(long id, String questionText, Test test) {
+        this.id = id;
         this.questionText = questionText;
         this.test = test;
     }
