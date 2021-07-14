@@ -5,7 +5,7 @@ import com.example.studenttest.model.Question;
 import com.example.studenttest.repository.QuestionRepository;
 import com.example.studenttest.service.OptionService;
 import com.example.studenttest.service.QuestionService;
-import com.example.studenttest.model.QuestionWithOptions;
+import com.example.studenttest.dto.QuestionWithOptionsDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,8 +26,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public ArrayList<QuestionWithOptions> getQuestionsByTestId(long testId) {
-        ArrayList<QuestionWithOptions> questionsWithOptions = new ArrayList<>();
+    public ArrayList<QuestionWithOptionsDto> getQuestionsByTestId(long testId) {
+        ArrayList<QuestionWithOptionsDto> questionWithOptionsDtoList = new ArrayList<>();
         ArrayList<Question> questionsFromTest = findByTestId(testId);
         for (Question question : questionsFromTest) {
             ArrayList<Option> optionsForQuestion = optionService.findByQuestionId(question.getId());
@@ -38,10 +38,10 @@ public class QuestionServiceImpl implements QuestionService {
                     rightOption = option;
                 }
             }
-            questionsWithOptions.add(
-                    new QuestionWithOptions(question, optionsForQuestion, pickedOption, rightOption.getOptionText())
+            questionWithOptionsDtoList.add(
+                    new QuestionWithOptionsDto(question, optionsForQuestion, pickedOption, rightOption.getOptionText())
             );
         }
-        return questionsWithOptions;
+        return questionWithOptionsDtoList;
     }
 }

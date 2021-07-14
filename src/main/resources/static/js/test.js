@@ -5,7 +5,8 @@ Vue.component('login-form', {
                 firstName: '',
                 secondName: '',
                 thirdName: ''
-            }
+            },
+            password: ''
         }
     },
     methods: {
@@ -16,9 +17,13 @@ Vue.component('login-form', {
                     'Content-Type': 'application/json'
                 },
                 body: (
-                    this.studentName.firstName.trim() + ' '
-                    + this.studentName.secondName.trim() + ' '
-                    + this.studentName.thirdName.trim()
+                    JSON.stringify(
+                        {
+                            username: this.studentName.firstName.trim() + ' ' + this.studentName.secondName.trim() + ' '
+                                + this.studentName.thirdName.trim(),
+                            password: this.password
+                        }
+                    )
                 )
             }).then(() => this.login())
         },
@@ -29,7 +34,7 @@ Vue.component('login-form', {
     computed: {
         validationError() {
             if ((this.studentName.firstName.trim() == '') || (this.studentName.secondName.trim() == '') ||
-                (this.studentName.thirdName.trim() == '')) {
+                (this.studentName.thirdName.trim() == '') || (this.password.trim() == '')) {
                 return true
             } else {
                 return false
@@ -41,6 +46,7 @@ Vue.component('login-form', {
             '<input v-model="studentName.firstName" placeholder="Фамилия" class="form-control mt-2" type="text">' +
             '<input v-model="studentName.secondName" placeholder="Имя" class="form-control mt-2" type="text">' +
             '<input v-model="studentName.thirdName" placeholder="Отчество" class="form-control mt-2" type="text">' +
+            '<input v-model="password" placeholder="Пароль" class="form-control mt-2" type="text">' +
             '<button @click="postStudentData" :disabled="validationError" class="btn btn-primary mt-2">Сохранить</button>' +
         '</div>'
 })

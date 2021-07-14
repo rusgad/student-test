@@ -1,5 +1,6 @@
 package com.example.studenttest.rest;
 
+import com.example.studenttest.dto.TestDto;
 import com.example.studenttest.model.Test;
 import com.example.studenttest.service.TestService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +18,8 @@ public class TestRestController {
     }
 
     @GetMapping
-    public ArrayList<Test> getTests() {
-        ArrayList<Test> tests = testService.findAll();
-        return tests;
+    public ArrayList<TestDto> getTests() {
+        ArrayList<TestDto> testDtoList = testService.findAll();
+        return testDtoList;
     }
 }

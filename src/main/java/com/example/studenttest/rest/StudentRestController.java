@@ -1,5 +1,6 @@
 package com.example.studenttest.rest;
 
+import com.example.studenttest.dto.StudentDto;
 import com.example.studenttest.model.Student;
 import com.example.studenttest.service.StudentService;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +15,8 @@ public class StudentRestController {
         this.studentService = studentService;
     }
 
-    @GetMapping
-    public ArrayList<Student> getStudents() {
-        ArrayList<Student> students = studentService.findAll();
-        return students;
-    }
-
     @PostMapping
-    public void saveStudentIfNotExist(@RequestBody String username) {
-        studentService.saveIfNotExist(username);
+    public void saveStudentIfNotExist(@RequestBody StudentDto studentDto) {
+        studentService.saveIfNotExist(studentDto);
     }
 }

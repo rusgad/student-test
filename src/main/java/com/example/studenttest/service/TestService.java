@@ -1,9 +1,8 @@
 package com.example.studenttest.service;
 
-import com.example.studenttest.model.Test;
-
+import com.example.studenttest.dto.TestDto;
 import java.util.ArrayList;
 
 public interface TestService {
-    ArrayList<Test> findAll();
+    ArrayList<TestDto> findAll();
 }

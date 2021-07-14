@@ -1,8 +1,11 @@
-package com.example.studenttest.model;
+package com.example.studenttest.dto;
+
+import com.example.studenttest.model.Option;
+import com.example.studenttest.model.Question;
 
 import java.util.ArrayList;
 
-public class QuestionWithOptions {
+public class QuestionWithOptionsDto {
     private String studentName;
     private Question question;
     private ArrayList<Option> options;
@@ -49,10 +52,10 @@ public class QuestionWithOptions {
         this.rightAnswer = rightAnswer;
     }
 
-    public QuestionWithOptions() {
+    public QuestionWithOptionsDto() {
     }
 
-    public QuestionWithOptions(Question question, ArrayList<Option> options, Option pickedAnswer, String rightAnswer) {
+    public QuestionWithOptionsDto(Question question, ArrayList<Option> options, Option pickedAnswer, String rightAnswer) {
         this.studentName = null;
         this.question = question;
         this.options = options;

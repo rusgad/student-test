@@ -6,7 +6,7 @@ import com.example.studenttest.model.Student;
 import com.example.studenttest.repository.AnswerRepository;
 import com.example.studenttest.repository.StudentRepository;
 import com.example.studenttest.service.AnswerService;
-import com.example.studenttest.model.QuestionWithOptions;
+import com.example.studenttest.dto.QuestionWithOptionsDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,9 +45,9 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public void saveAnswers(ArrayList<QuestionWithOptions> answersFromStudent) {
+    public void saveAnswers(ArrayList<QuestionWithOptionsDto> answersFromStudent) {
         Student student = studentRepository.findByUsername(answersFromStudent.get(0).getStudentName());
-        for (QuestionWithOptions answer : answersFromStudent) {
+        for (QuestionWithOptionsDto answer : answersFromStudent) {
             if (!existByStudentAndQuestion(student, answer.getQuestion())) {
                 Answer newAnswer = new Answer(
                         student,

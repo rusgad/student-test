@@ -9,6 +9,7 @@ public class Student {
     @GeneratedValue(generator = "student_sequence")
     private long id;
     private String username;
+    private String password;
 
     public Long getId() {
         return id;
@@ -26,10 +27,19 @@ public class Student {
         this.username = username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Student() {
     }
 
-    public Student(String username) {
+    public Student(String username, String password) {
         this.username = username;
+        this.password = password;
     }
 }

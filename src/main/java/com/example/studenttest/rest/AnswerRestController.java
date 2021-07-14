@@ -1,6 +1,6 @@
 package com.example.studenttest.rest;
 
-import com.example.studenttest.model.QuestionWithOptions;
+import com.example.studenttest.dto.QuestionWithOptionsDto;
 import com.example.studenttest.service.AnswerService;
 import com.example.studenttest.service.StudentService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,15 +13,13 @@ import java.util.ArrayList;
 @RequestMapping("/api/answer")
 public class AnswerRestController {
     private final AnswerService answerService;
-    private final StudentService studentService;
 
-    public AnswerRestController(AnswerService answerService, StudentService studentService) {
+    public AnswerRestController(AnswerService answerService) {
         this.answerService = answerService;
-        this.studentService = studentService;
     }
 
     @PostMapping
-    public void saveAnswers(@RequestBody ArrayList<QuestionWithOptions> answersFromStudent) {
+    public void saveAnswers(@RequestBody ArrayList<QuestionWithOptionsDto> answersFromStudent) {
         answerService.saveAnswers(answersFromStudent);
     }
 }

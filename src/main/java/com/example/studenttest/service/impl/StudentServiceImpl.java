@@ -1,9 +1,9 @@
 package com.example.studenttest.service.impl;
 
+import com.example.studenttest.dto.StudentDto;
 import com.example.studenttest.model.Student;
 import com.example.studenttest.repository.StudentRepository;
 import com.example.studenttest.service.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,20 +17,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void saveIfNotExist(String username) {
-        if (!studentRepository.existsByUsername(username)) {
-            Student newStudent = new Student(username);
+    public void saveIfNotExist(StudentDto studentDto) {
+        if (!studentRepository.existsByUsernameAndPassword(studentDto.getUsername(), studentDto.getPassword())) {
+            Student newStudent = new Student(studentDto.getUsername(), studentDto.getPassword());
             studentRepository.save(newStudent);
         }
-    }
-//ControllerAdvice
-    @Override
-    public ArrayList<Student> findAll() {
-        return (ArrayList<Student>) studentRepository.findAll();
-    }
-
-    @Override
-    public Student findByUsername(String username) {
-        return studentRepository.findByUsername(username);
     }
 }
