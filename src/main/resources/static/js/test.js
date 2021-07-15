@@ -99,15 +99,14 @@ Vue.component('test-section', {
                 '</div>' +
             '</div>' +
         '</div>' +
-        '<test v-else @return-back="showOrHideTest" :student-name="studentName" :selected-test="selectedTest"/>'
+        '<test v-else @return-back="showOrHideTest" :student="student" :selected-test="selectedTest"/>'
 })
 
 Vue.component('test', {
-    props: ["selectedTest", "studentName"],
+    props: ["selectedTest", "student"],
     data() {
         return {
             questionsWithOptions: [],
-            latestResultOfTest: [],
             selectedAnswers: [],
             triggers: {
                 allQuestionAnswered: false,
@@ -123,13 +122,14 @@ Vue.component('test', {
         fetchQuestionsWithOptions() {
             fetch('http://localhost:8080/api/question/' + this.selectedTest.id)
                 .then(response => response.json())
-                .then(data => {
-                    this.questionsWithOptions = data
-                    for (let item of this.questionsWithOptions) {
-                        item.studentName =
-                            this.studentName.firstName + ' ' +
-                            this.studentName.secondName + ' ' +
-                            this.studentName.thirdName
+                .then(questions => {
+                    for (question of questions) {
+                        let localQuestion = question
+                        fetch('http://localhost:8080/api/option/' + question.id)
+                            .then(response => response.json())
+                            .then(options => {
+                                this.questionsWithOptions.push({question: localQuestion, options: options, selectedAnswer: {}})
+                            })
                     }
                 })
         },
@@ -150,61 +150,60 @@ Vue.component('test', {
             this.triggers.testIsComplete = true
             this.triggers.showResultTrigger = true
         },
-        checkAnswersOnNull() {
-            for (let item of this.questionsWithOptions) {
-                if (item.pickedAnswer.optionText == null) {
-                    this.triggers.allQuestionAnswered = false
-                    break
-                } else {
-                    this.triggers.allQuestionAnswered = true
-                }
-            }
-        },
-        countRightAnswers() {
-            let questionQuantity = this.questionsWithOptions.length
-            let rightAnswersCount = 0
-            for (let answer of this.questionsWithOptions) {
-                if (answer.pickedAnswer.right) {
-                    rightAnswersCount++
-                }
-            }
-            return rightAnswersCount + '/' + questionQuantity
-        }
+        // checkAnswersOnNull() {
+        //     for (let item of this.questionsWithOptions) {
+        //         if (item.pickedAnswer.optionText == null) {
+        //             this.triggers.allQuestionAnswered = false
+        //             break
+        //         } else {
+        //             this.triggers.allQuestionAnswered = true
+        //         }
+        //     }
+        // },
+        // countRightAnswers() {
+        //     let questionQuantity = this.questionsWithOptions.length
+        //     let rightAnswersCount = 0
+        //     for (let answer of this.questionsWithOptions) {
+        //         if (answer.pickedAnswer.right) {
+        //             rightAnswersCount++
+        //         }
+        //     }
+        //     return rightAnswersCount + '/' + questionQuantity
+        // }
     },
     created() {
         this.fetchQuestionsWithOptions()
     },
     template:
         '<div class="container col-12 bg-light rounded border border-secondary mt-2 mb-2 p-2">' +
-            '<h1 class="text-center mb-4">{{selectedTest.title}}</h1>' +
-            '<div v-for="(questionWithOptions, index) in questionsWithOptions">' +
-                '<div class="m-2 p-2 rounded-3" ' +
-                        ':class="{\'bg-danger text-white\': (!questionWithOptions.pickedAnswer.right &&' +
-                        ' triggers.showResultTrigger), \'bg-success text-white\':' +
-                        ' (questionWithOptions.pickedAnswer.right && triggers.showResultTrigger)}">' +
-                    '<h4>{{index + 1}}. {{questionWithOptions.question.questionText}}</h4>' +
-                    '<div  v-for="option in questionWithOptions.options">' +
-                        '<div class="rounded align-items-center d-flex p-1">' +
-                            '<input class="form-check-input col-1 m-1" type="radio" ' +
-                                    '@change="checkAnswersOnNull" ' +
-                                    ':disabled="triggers.testIsComplete"' +
-                                    'v-bind:id="option.optionText"' +
-                                    'v-bind:name="questionWithOptions.question.id"' +
-                                    'v-bind:value="option" v-model="questionWithOptions.pickedAnswer"> ' +
-                            '<label v-bind:for="option.optionText" class="form-check-label col-10 m-1 fs-5">' +
-                                '{{option.optionText}}' +
-                            '</label>' +
+            '<div>' +
+                '<h1 class="text-center mb-4">{{selectedTest.title}}</h1>' +
+                '<div v-for="(questionWithOptions, index) in questionsWithOptions">' +
+                    '<div class="m-2 p-2 rounded-3" ' +
+                        '<h4>{{index + 1}}. {{questionWithOptions.question.questionText}}</h4>' +
+                        '<div  v-for="option in questionWithOptions.options">' +
+                            '<div class="rounded align-items-center d-flex p-1">' +
+                                '<input class="form-check-input col-1 m-1" type="radio" ' +
+                                        // '@change="checkAnswersOnNull" ' +
+                                        ':disabled="triggers.testIsComplete"' +
+                                        'v-bind:id="option.optionText"' +
+                                        'v-bind:name="questionWithOptions.question.id"' +
+                                        'v-bind:value="option" v-model="questionWithOptions.selectedAnswer"> ' +
+                                '<label v-bind:for="option.optionText" class="form-check-label col-10 m-1 fs-5">' +
+                                    '{{option.optionText}}' +
+                                '</label>' +
+                            '</div>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
-            '</div>' +
-            '<div class="row justify-content-between m-3">' +
-                '<button @click="returnBack" class="col-3 btn btn-primary">Вернуться назад</button>' +
-                '<span v-show="triggers.showResultTrigger" class="col-3 text-center display-6">' +
-                    '{{countRightAnswers()}}' +
-                '</span>' +
-                '<button @click="saveTestResult" :disabled="!triggers.allQuestionAnswered || triggers.testIsComplete"' +
-                        ' class="col-3 btn btn-primary">Завершить тест</button>' +
+                '<div class="row justify-content-between m-3">' +
+                    '<button @click="returnBack" class="col-3 btn btn-primary">Вернуться назад</button>' +
+                    '<span v-show="triggers.showResultTrigger" class="col-3 text-center display-6">' +
+
+                    '</span>' +
+                    '<button @click="saveTestResult" :disabled="!triggers.allQuestionAnswered || triggers.testIsComplete"' +
+                            ' class="col-3 btn btn-primary">Завершить тест</button>' +
+                '</div>' +
             '</div>' +
         '</div>'
 })

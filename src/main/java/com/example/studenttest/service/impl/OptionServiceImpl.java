@@ -21,7 +21,7 @@ public class OptionServiceImpl implements OptionService {
         ArrayList<Option> options = optionRepository.findByQuestionId(id);
         ArrayList<OptionDto> optionDtoList = new ArrayList<>();
         for (Option option : options) {
-            OptionDto optionDto = new OptionDto(option.getId(), option.getOptionText(), option.getQuestion());
+            OptionDto optionDto = new OptionDto(option.getId(), option.getOptionText(), option.getQuestion().getId());
             optionDtoList.add(optionDto);
         }
         return optionDtoList;

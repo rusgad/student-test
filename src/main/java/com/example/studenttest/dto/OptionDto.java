@@ -5,15 +5,15 @@ import com.example.studenttest.model.Question;
 public class OptionDto {
     private long id;
     private String optionText;
-    private Question question;
+    private long questionId;
 
     public OptionDto() {
     }
 
-    public OptionDto(long id, String optionText, Question question) {
+    public OptionDto(long id, String optionText, long questionId) {
         this.id = id;
         this.optionText = optionText;
-        this.question = question;
+        this.questionId = questionId;
     }
 
     public long getId() {
@@ -32,11 +32,11 @@ public class OptionDto {
         this.optionText = optionText;
     }
 
-    public Question getQuestion() {
-        return question;
+    public long getQuestionId() {
+        return questionId;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
+    public void setQuestionId(long questionId) {
+        this.questionId = questionId;
     }
 }

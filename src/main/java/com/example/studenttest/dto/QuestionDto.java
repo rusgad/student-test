@@ -5,12 +5,10 @@ import com.example.studenttest.model.Test;
 public class QuestionDto {
     private long id;
     private String questionText;
-    private Test test;
 
-    public QuestionDto(Long id, String questionText, Test test) {
+    public QuestionDto(long id, String questionText) {
         this.id = id;
         this.questionText = questionText;
-        this.test = test;
     }
 
     public long getId() {
@@ -27,13 +25,5 @@ public class QuestionDto {
 
     public void setQuestionText(String questionText) {
         this.questionText = questionText;
-    }
-
-    public Test getTest() {
-        return test;
-    }
-
-    public void setTest(Test test) {
-        this.test = test;
     }
 }

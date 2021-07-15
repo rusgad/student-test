@@ -1,7 +1,6 @@
 package com.example.studenttest.service.impl;
 
 import com.example.studenttest.dto.QuestionDto;
-import com.example.studenttest.mapper.QuestionMapper;
 import com.example.studenttest.model.Option;
 import com.example.studenttest.model.Question;
 import com.example.studenttest.repository.QuestionRepository;
@@ -26,7 +25,7 @@ public class QuestionServiceImpl implements QuestionService {
         ArrayList<Question> questions = questionRepository.findAllByTestId(id);
         ArrayList<QuestionDto> questionDtoList = new ArrayList<>();
         for (Question question : questions) {
-            QuestionDto questionDto = new QuestionDto(question.getId(), question.getQuestionText(), question.getTest());
+            QuestionDto questionDto = new QuestionDto(question.getId(), question.getQuestionText());
             questionDtoList.add(questionDto);
         }
         return questionDtoList;
