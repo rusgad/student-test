@@ -1,7 +1,5 @@
 package com.example.studenttest.dto;
 
-import com.example.studenttest.model.Test;
-
 public class QuestionDto {
     private long id;
     private String questionText;

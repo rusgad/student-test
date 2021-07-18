@@ -9,4 +9,5 @@ import java.util.ArrayList;
 @Repository
 public interface OptionRepository extends JpaRepository<Option, Long> {
     ArrayList<Option> findByQuestionId(long id);
+    Option findById(long id);
 }

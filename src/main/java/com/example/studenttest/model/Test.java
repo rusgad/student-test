@@ -32,4 +32,9 @@ public class Test {
     public Test(String title) {
         this.title = title;
     }
+
+    public Test(long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 }

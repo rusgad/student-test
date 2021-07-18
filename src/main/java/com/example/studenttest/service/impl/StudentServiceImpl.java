@@ -15,6 +15,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Student findByUsernameAndPassword(String username, String password) {
+        return studentRepository.findByUsernameAndPassword(username, password);
+    }
+
+    @Override
     public void saveIfNotExist(StudentDto studentDto) {
         if (!studentRepository.existsByUsernameAndPassword(studentDto.getUsername(), studentDto.getPassword())) {
             Student newStudent = new Student(studentDto.getUsername(), studentDto.getPassword());

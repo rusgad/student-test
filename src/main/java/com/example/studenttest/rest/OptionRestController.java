@@ -1,7 +1,6 @@
 package com.example.studenttest.rest;
 
 import com.example.studenttest.dto.OptionDto;
-import com.example.studenttest.model.Option;
 import com.example.studenttest.service.OptionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -2,7 +2,7 @@ Vue.component('login-form', {
     data: function () {
         return {
             student: {
-                studentName: {
+                username: {
                     firstName: '',
                     secondName: '',
                     thirdName: ''
@@ -22,9 +22,9 @@ Vue.component('login-form', {
                     JSON.stringify(
                         {
                             username:
-                                this.student.studentName.firstName.trim() + ' ' +
-                                this.student.studentName.secondName.trim() + ' ' +
-                                this.student.studentName.thirdName.trim(),
+                                this.student.username.firstName.trim() + ' ' +
+                                this.student.username.secondName.trim() + ' ' +
+                                this.student.username.thirdName.trim(),
                             password: this.student.password
                         }
                     )
@@ -37,8 +37,8 @@ Vue.component('login-form', {
     },
     computed: {
         validationError() {
-            if ((this.student.studentName.firstName.trim() == '') || (this.student.studentName.secondName.trim() == '') ||
-                (this.student.studentName.thirdName.trim() == '') || (this.student.password.trim() == '')) {
+            if ((this.student.username.firstName.trim() == '') || (this.student.username.secondName.trim() == '') ||
+                (this.student.username.thirdName.trim() == '') || (this.student.password.trim() == '')) {
                 return true
             } else {
                 return false
@@ -47,9 +47,9 @@ Vue.component('login-form', {
     },
     template:
         '<div class="row col-md-6 mx-auto">' +
-            '<input v-model="student.studentName.firstName" placeholder="Фамилия" class="form-control mt-2" type="text">' +
-            '<input v-model="student.studentName.secondName" placeholder="Имя" class="form-control mt-2" type="text">' +
-            '<input v-model="student.studentName.thirdName" placeholder="Отчество" class="form-control mt-2" type="text">' +
+            '<input v-model="student.username.firstName" placeholder="Фамилия" class="form-control mt-2" type="text">' +
+            '<input v-model="student.username.secondName" placeholder="Имя" class="form-control mt-2" type="text">' +
+            '<input v-model="student.username.thirdName" placeholder="Отчество" class="form-control mt-2" type="text">' +
             '<input v-model="student.password" placeholder="Пароль" class="form-control mt-2" type="text">' +
             '<button @click="postStudentData" :disabled="validationError" class="btn btn-primary mt-2">Сохранить</button>' +
         '</div>'
@@ -88,7 +88,7 @@ Vue.component('test-section', {
     template:
         '<div v-if="!testIsSelected">' +
             '<h3 class="text-center m-4">' +
-                'Здравствуйте, {{student.studentName.firstName}} {{student.studentName.secondName}}' +
+                'Здравствуйте, {{student.username.firstName}} {{student.username.secondName}}' +
             '</h3>' +
             '<div v-for="test in tests">' +
                 '<div class="row input-group bg-light m-2 border border-secondary rounded">' +
@@ -107,7 +107,8 @@ Vue.component('test', {
     data() {
         return {
             questionsWithOptions: [],
-            selectedAnswers: [],
+            finalAnswers: [],
+            lastResult: [],
             triggers: {
                 allQuestionAnswered: false,
                 showResultTrigger: false,
@@ -135,41 +136,68 @@ Vue.component('test', {
         },
         saveTestResult() {
             if (this.triggers.allQuestionAnswered == true) {
+                this.prepareCorrectAnswers()
                 fetch('http://localhost:8080/api/answer', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(this.questionsWithOptions)
+                    body: JSON.stringify(this.finalAnswers)
                 })
-                    .then(this.showResult)
-                    .then(this.countRightAnswers)
+                    .then(this.fetchResult)
+                    // .then(this.showResult)
+                    // .then(this.countRightAnswers)
             }
+        },
+        prepareCorrectAnswers() {
+            for (questionWithOptions of this.questionsWithOptions) {
+                this.finalAnswers.push({
+                    student: {
+                        username: this.student.username.firstName + ' ' + this.student.username.secondName + ' ' +
+                            this.student.username.thirdName,
+                        password: this.student.password
+                    },
+                    selectedOption: questionWithOptions.selectedAnswer,
+                    test: this.selectedTest,
+                    question: questionWithOptions.question
+                })
+            }
+        },
+        fetchResult() {
+            fetch('http://localhost:8080/api/answer/' + this.selectedTest.id, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: this.student.username.firstName + ' ' + this.student.username.secondName + ' ' +
+                        this.student.username.thirdName,
+                    password: this.student.password
+                })
+            })
+                .then(response => response.json())
+                .then(data => this.lastResult = data)
+
         },
         showResult() {
             this.triggers.testIsComplete = true
             this.triggers.showResultTrigger = true
         },
-        // checkAnswersOnNull() {
-        //     for (let item of this.questionsWithOptions) {
-        //         if (item.pickedAnswer.optionText == null) {
-        //             this.triggers.allQuestionAnswered = false
-        //             break
-        //         } else {
-        //             this.triggers.allQuestionAnswered = true
-        //         }
-        //     }
-        // },
-        // countRightAnswers() {
-        //     let questionQuantity = this.questionsWithOptions.length
-        //     let rightAnswersCount = 0
-        //     for (let answer of this.questionsWithOptions) {
-        //         if (answer.pickedAnswer.right) {
-        //             rightAnswersCount++
-        //         }
-        //     }
-        //     return rightAnswersCount + '/' + questionQuantity
-        // }
+        checkAnswersOnNull() {
+            for (let questionWithOptions of this.questionsWithOptions) {
+                if (questionWithOptions.selectedAnswer.id == null) {
+                    this.triggers.allQuestionAnswered = false
+                    break
+                } else {
+                    this.triggers.allQuestionAnswered = true
+                }
+            }
+        },
+        countRightAnswers() {
+            let questionQuantity = this.questionsWithOptions.length
+            let rightAnswersCount = this.lastResult.length
+            return rightAnswersCount + '/' + questionQuantity
+        }
     },
     created() {
         this.fetchQuestionsWithOptions()
@@ -184,7 +212,7 @@ Vue.component('test', {
                         '<div  v-for="option in questionWithOptions.options">' +
                             '<div class="rounded align-items-center d-flex p-1">' +
                                 '<input class="form-check-input col-1 m-1" type="radio" ' +
-                                        // '@change="checkAnswersOnNull" ' +
+                                        '@change="checkAnswersOnNull" ' +
                                         ':disabled="triggers.testIsComplete"' +
                                         'v-bind:id="option.optionText"' +
                                         'v-bind:name="questionWithOptions.question.id"' +
@@ -199,7 +227,7 @@ Vue.component('test', {
                 '<div class="row justify-content-between m-3">' +
                     '<button @click="returnBack" class="col-3 btn btn-primary">Вернуться назад</button>' +
                     '<span v-show="triggers.showResultTrigger" class="col-3 text-center display-6">' +
-
+                        '{{countRightAnswers()}}' +
                     '</span>' +
                     '<button @click="saveTestResult" :disabled="!triggers.allQuestionAnswered || triggers.testIsComplete"' +
                             ' class="col-3 btn btn-primary">Завершить тест</button>' +
@@ -213,7 +241,7 @@ var app = new Vue({
     data: {
         userIsLoggedIn: false,
         student: {
-            studentName: {
+            username: {
                 firstName: '',
                 secondName: '',
                 thirdName: ''
@@ -223,9 +251,9 @@ var app = new Vue({
     },
     methods: {
         saveStudentNameAndChangeComponent(student) {
-            this.student.studentName.firstName = student.studentName.firstName
-            this.student.studentName.secondName = student.studentName.secondName
-            this.student.studentName.thirdName = student.studentName.thirdName
+            this.student.username.firstName = student.username.firstName
+            this.student.username.secondName = student.username.secondName
+            this.student.username.thirdName = student.username.thirdName
             this.student.password = student.password
             this.loginUser()
         },

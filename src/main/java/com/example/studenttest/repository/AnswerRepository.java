@@ -10,6 +10,6 @@ import java.util.ArrayList;
 
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
-    ArrayList<Answer> findByStudent_UsernameAndTest_Id(String username, long testId);
+    ArrayList<Answer> findByStudentAndTestId(Student student, long testId);
     Answer findAnswerByStudentAndQuestion(Student student, Question question);
 }

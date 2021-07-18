@@ -1,17 +1,13 @@
 package com.example.studenttest.dto;
 
-import com.example.studenttest.model.Option;
-import com.example.studenttest.model.Question;
-import com.example.studenttest.model.Student;
-import com.example.studenttest.model.Test;
-
-import javax.persistence.ManyToOne;
-
 public class AnswerDto {
     private StudentDto student;
     private OptionDto selectedOption;
     private TestDto test;
     private QuestionDto question;
+
+    public AnswerDto() {
+    }
 
     public AnswerDto(OptionDto selectedOption, TestDto test, QuestionDto question) {
         this.selectedOption = selectedOption;

@@ -12,7 +12,7 @@ public class Question {
     @OneToOne
     private Test test;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
