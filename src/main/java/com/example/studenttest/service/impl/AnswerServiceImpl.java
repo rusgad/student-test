@@ -7,7 +7,6 @@ import com.example.studenttest.service.AnswerService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 @Service
 public class AnswerServiceImpl implements AnswerService {

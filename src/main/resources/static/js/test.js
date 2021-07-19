@@ -145,8 +145,6 @@ Vue.component('test', {
                     body: JSON.stringify(this.finalAnswers)
                 })
                     .then(this.fetchResult)
-                    // .then(this.showResult)
-                    // .then(this.countRightAnswers)
             }
         },
         prepareCorrectAnswers() {
@@ -177,7 +175,7 @@ Vue.component('test', {
             })
                 .then(response => response.json())
                 .then(data => this.lastResult = data)
-
+                .then(this.showResult)
         },
         showResult() {
             this.triggers.testIsComplete = true
@@ -208,7 +206,10 @@ Vue.component('test', {
                 '<h1 class="text-center mb-4">{{selectedTest.title}}</h1>' +
                 '<div v-for="(questionWithOptions, index) in questionsWithOptions">' +
                     '<div class="m-2 p-2 rounded-3" ' +
-                        '<h4>{{index + 1}}. {{questionWithOptions.question.questionText}}</h4>' +
+                            ':class="{\'bg-danger text-white\': (lastResult.indexOf(questionWithOptions.question.id) == -1  &&' +
+                            ' triggers.showResultTrigger), \'bg-success text-white\':' +
+                            ' (lastResult.indexOf(questionWithOptions.question.id) != -1 && triggers.showResultTrigger)}">' +
+                    '<h4>{{index + 1}}. {{questionWithOptions.question.questionText}}</h4>' +
                         '<div  v-for="option in questionWithOptions.options">' +
                             '<div class="rounded align-items-center d-flex p-1">' +
                                 '<input class="form-check-input col-1 m-1" type="radio" ' +
