@@ -1,12 +1,17 @@
 package com.example.studenttest.dto;
 
-public class OptionDto {
-    private long id;
-    private String optionText;
-    private long questionId;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-    public OptionDto() {
-    }
+public class OptionDto {
+    @NotNull(message = "id is null")
+    @Min(value = 1, message = "id is less than 1")
+    private long id;
+    @NotBlank(message = "option text is blank")
+    private String optionText;
+    @NotNull(message = "question id is null")
+    private long questionId;
 
     public OptionDto(long id, String optionText, long questionId) {
         this.id = id;

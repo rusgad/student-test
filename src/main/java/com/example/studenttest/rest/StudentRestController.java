@@ -1,6 +1,7 @@
 package com.example.studenttest.rest;
 
 import com.example.studenttest.dto.StudentDto;
+import com.example.studenttest.exception.UserNotFoundException;
 import com.example.studenttest.service.StudentService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +18,7 @@ public class StudentRestController {
     }
 
     @PostMapping
-    public void saveStudentIfNotExist(@RequestBody StudentDto studentDto) {
-        studentService.saveIfNotExist(studentDto);
+    public void saveStudentIfNotExist(@RequestBody StudentDto studentDto) throws UserNotFoundException {
+        studentService.loginIfExist(studentDto);
     }
 }

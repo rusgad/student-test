@@ -8,7 +8,6 @@ import com.example.studenttest.service.StudentService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/answer")

@@ -1,13 +1,17 @@
 package com.example.studenttest.dto;
 
-public class AnswerDto {
-    private StudentDto student;
-    private OptionDto selectedOption;
-    private TestDto test;
-    private QuestionDto question;
 
-    public AnswerDto() {
-    }
+import javax.validation.constraints.NotNull;
+
+public class AnswerDto {
+    @NotNull(message = "student is null")
+    private StudentDto student;
+    @NotNull(message = "selected option is null")
+    private OptionDto selectedOption;
+    @NotNull(message = "test is null")
+    private TestDto test;
+    @NotNull(message = "question is null")
+    private QuestionDto question;
 
     public AnswerDto(OptionDto selectedOption, TestDto test, QuestionDto question) {
         this.selectedOption = selectedOption;

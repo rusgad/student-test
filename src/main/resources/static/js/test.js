@@ -8,7 +8,8 @@ Vue.component('login-form', {
                     thirdName: ''
                 },
                 password: ''
-            }
+            },
+            userNotFoundTrigger: false
         }
     },
     methods: {
@@ -29,7 +30,13 @@ Vue.component('login-form', {
                         }
                     )
                 )
-            }).then(() => this.login())
+            }).then((res) => {
+                if (res.status == 400) {
+                    this.userNotFoundTrigger = true
+                } else {
+                    this.login()
+                }
+            })
         },
         login() {
             this.$emit('login', this.student)
@@ -50,8 +57,9 @@ Vue.component('login-form', {
             '<input v-model="student.username.firstName" placeholder="Фамилия" class="form-control mt-2" type="text">' +
             '<input v-model="student.username.secondName" placeholder="Имя" class="form-control mt-2" type="text">' +
             '<input v-model="student.username.thirdName" placeholder="Отчество" class="form-control mt-2" type="text">' +
-            '<input v-model="student.password" placeholder="Пароль" class="form-control mt-2" type="text">' +
+            '<input v-model="student.password" placeholder="Пароль" class="form-control mt-2" type="password">' +
             '<button @click="postStudentData" :disabled="validationError" class="btn btn-primary mt-2">Сохранить</button>' +
+            '<div v-show="userNotFoundTrigger" class="fs-5 text-center text-danger m-1">Пользователь не найден</div>' +
         '</div>'
 })
 

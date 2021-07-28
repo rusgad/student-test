@@ -1,7 +1,12 @@
 package com.example.studenttest.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class QuestionDto {
+    @NotNull(message = "id is null")
     private long id;
+    @NotBlank(message = "question text is blank")
     private String questionText;
 
     public QuestionDto(long id, String questionText) {

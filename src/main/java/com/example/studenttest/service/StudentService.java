@@ -1,10 +1,9 @@
 package com.example.studenttest.service;
 
 import com.example.studenttest.dto.StudentDto;
-import com.example.studenttest.model.Student;
+import com.example.studenttest.exception.UserNotFoundException;
 
 
 public interface StudentService {
-    Student findByUsernameAndPassword(String username, String password);
-    void saveIfNotExist(StudentDto studentDto);
+    void loginIfExist(StudentDto studentDto) throws UserNotFoundException;
 }

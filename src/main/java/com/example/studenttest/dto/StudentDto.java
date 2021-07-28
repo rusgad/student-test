@@ -1,7 +1,11 @@
 package com.example.studenttest.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class StudentDto {
+    @NotBlank(message = "username is blank")
     private String username;
+    @NotBlank(message = "password is blank")
     private String password;
 
     public StudentDto(String username, String password) {
