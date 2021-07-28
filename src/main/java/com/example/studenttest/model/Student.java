@@ -11,11 +11,14 @@ public class Student {
     private String username;
     private String password;
 
-    public Long getId() {
+    public Student() {
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -32,14 +35,6 @@ public class Student {
     }
 
     public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Student() {
-    }
-
-    public Student(String username, String password) {
-        this.username = username;
         this.password = password;
     }
 }

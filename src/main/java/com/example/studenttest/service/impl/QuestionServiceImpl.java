@@ -5,7 +5,6 @@ import com.example.studenttest.model.Question;
 import com.example.studenttest.repository.QuestionRepository;
 import com.example.studenttest.service.QuestionService;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 
 @Service

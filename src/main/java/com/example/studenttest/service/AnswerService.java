@@ -4,9 +4,7 @@ import com.example.studenttest.dto.AnswerDto;
 import com.example.studenttest.dto.QuestionDto;
 import com.example.studenttest.dto.StudentDto;
 import com.example.studenttest.model.Answer;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public interface AnswerService {
     void save(Answer answer);

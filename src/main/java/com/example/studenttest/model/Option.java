@@ -13,11 +13,14 @@ public class Option {
     @ManyToOne
     private Question question;
 
-    public Long getId() {
+    public Option() {
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -42,15 +45,6 @@ public class Option {
     }
 
     public void setQuestion(Question question) {
-        this.question = question;
-    }
-
-    public Option() {
-    }
-
-    public Option(String optionText, boolean isRight, Question question) {
-        this.optionText = optionText;
-        this.isRight = isRight;
         this.question = question;
     }
 }

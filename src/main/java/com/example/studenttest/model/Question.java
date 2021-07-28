@@ -12,11 +12,20 @@ public class Question {
     @OneToOne
     private Test test;
 
+    public Question() {
+    }
+
+    public Question(long id, String questionText, Test test) {
+        this.id = id;
+        this.questionText = questionText;
+        this.test = test;
+    }
+
     public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -33,15 +42,6 @@ public class Question {
     }
 
     public void setTest(Test test) {
-        this.test = test;
-    }
-
-    public Question() {
-    }
-
-    public Question(long id, String questionText, Test test) {
-        this.id = id;
-        this.questionText = questionText;
         this.test = test;
     }
 }

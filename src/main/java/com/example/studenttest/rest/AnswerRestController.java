@@ -2,7 +2,6 @@ package com.example.studenttest.rest;
 
 import com.example.studenttest.dto.AnswerDto;
 import com.example.studenttest.dto.StudentDto;
-import com.example.studenttest.model.Student;
 import com.example.studenttest.service.AnswerService;
 import com.example.studenttest.service.StudentService;
 import org.springframework.web.bind.annotation.*;

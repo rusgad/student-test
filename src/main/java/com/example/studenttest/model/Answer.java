@@ -17,6 +17,16 @@ public class Answer {
     @ManyToOne
     private Question question;
 
+    public Answer() {
+    }
+
+    public Answer(Student student, Option pickedOption, Test test, Question question) {
+        this.student = student;
+        this.pickedOption = pickedOption;
+        this.test = test;
+        this.question = question;
+    }
+
     public long getId() {
         return id;
     }
@@ -37,8 +47,8 @@ public class Answer {
         return pickedOption;
     }
 
-    public void setPickedOption(Option selectedOption) {
-        this.pickedOption = selectedOption;
+    public void setPickedOption(Option pickedOption) {
+        this.pickedOption = pickedOption;
     }
 
     public Test getTest() {
@@ -54,16 +64,6 @@ public class Answer {
     }
 
     public void setQuestion(Question question) {
-        this.question = question;
-    }
-
-    public Answer() {
-    }
-
-    public Answer(Student student, Option pickedOption, Test test, Question question) {
-        this.student = student;
-        this.pickedOption = pickedOption;
-        this.test = test;
         this.question = question;
     }
 }

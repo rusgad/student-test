@@ -1,6 +1,5 @@
 package com.example.studenttest.dto;
 
-
 import javax.validation.constraints.NotNull;
 
 public class AnswerDto {
@@ -29,10 +28,6 @@ public class AnswerDto {
 
     public OptionDto getSelectedOption() {
         return selectedOption;
-    }
-
-    public void setSelectedOption(OptionDto selectedOption) {
-        this.selectedOption = selectedOption;
     }
 
     public TestDto getTest() {
