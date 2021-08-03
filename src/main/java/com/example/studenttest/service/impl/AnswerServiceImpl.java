@@ -15,7 +15,9 @@ public class AnswerServiceImpl implements AnswerService {
     private OptionRepository optionRepository;
     private TestRepository testRepository;
 
-    public AnswerServiceImpl(AnswerRepository answerRepository, StudentRepository studentRepository, QuestionRepository questionRepository, OptionRepository optionRepository, TestRepository testRepository) {
+    public AnswerServiceImpl(AnswerRepository answerRepository, StudentRepository studentRepository,
+                             QuestionRepository questionRepository, OptionRepository optionRepository,
+                             TestRepository testRepository) {
         this.answerRepository = answerRepository;
         this.studentRepository = studentRepository;
         this.questionRepository = questionRepository;
