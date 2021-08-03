@@ -223,10 +223,10 @@ Vue.component('test', {
                                 '<input class="form-check-input col-1 m-1" type="radio" ' +
                                         '@change="checkAnswersOnNull" ' +
                                         ':disabled="triggers.testIsComplete"' +
-                                        'v-bind:id="option.optionText"' +
+                                        'v-bind:id="option.id"' +
                                         'v-bind:name="questionWithOptions.question.id"' +
                                         'v-bind:value="option" v-model="questionWithOptions.selectedAnswer"> ' +
-                                '<label v-bind:for="option.optionText" class="form-check-label col-10 m-1 fs-5">' +
+                                '<label v-bind:for="option.id" class="form-check-label col-10 m-1 fs-5">' +
                                     '{{option.optionText}}' +
                                 '</label>' +
                             '</div>' +
